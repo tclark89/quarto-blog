@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "quarto-blog",
+    "section": "",
+    "text": "news\n\n\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\nTyler Clark\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\nTyler Clark\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "The github repository for the entire site can be found here."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "My favorite R packages",
+    "section": "",
+    "text": "Mind Blown\nJust the %>% operator alone radically changed my workflow and caused me to refactor all of my code. Then learning how to use all of the data manipulation tools in dplyr (mutate, select, separate, oh how I could go on) made working with data exciting and intelligible instead of some chore full of arcane commands and confusing code.\nRMarkdown and now Quarto have given me many new avenues for reporting data, results, and analysis, even though I am still heavily tied to having to email an Excel file for some of the old-school folks (I guess if it ain’t broke…). Well, that’s why I learned some VBA too."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This is a blog where I keep code snippets, thoughts, interesting analyses, or just whatever enters my mind."
+  },
+  {
+    "objectID": "posts/my-favorite-packages/index.html",
+    "href": "posts/my-favorite-packages/index.html",
+    "title": "My favorite R packages",
+    "section": "",
+    "text": "Mind Blown\nJust the %>% operator alone radically changed my workflow and caused me to refactor all of my code. Then learning how to use all of the data manipulation tools in dplyr (mutate, select, separate, oh how I could go on) made working with data exciting and intelligible instead of some chore full of arcane commands and confusing code.\nRMarkdown and now Quarto have given me many new avenues for reporting data, results, and analysis, even though I am still heavily tied to having to email an Excel file for some of the old-school folks (I guess if it ain’t broke…). Well, that’s why I learned some VBA too."
+  }
+]
