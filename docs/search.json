@@ -1,10 +1,31 @@
 [
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This is a blog where I keep code snippets, thoughts, interesting analyses, or just whatever enters my mind."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "The Blog",
     "section": "",
-    "text": "flatpak\n\n\nlinux\n\n\nnotes\n\n\ndebian\n\n\narchlinux\n\n\n\n\n\n\n\n\n\n\n\nSep 4, 2022\n\n\nTyler Clark\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\nTyler Clark\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nR\n\n\nRstudio\n\n\ntidyverse\n\n\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\nTyler Clark\n\n\n\n\n\n\nNo matching items"
+    "text": "flatpak\n\n\nlinux\n\n\nnotes\n\n\ndebian\n\n\narchlinux\n\n\n\n\n\n\n\n\n\n\n\nSep 4, 2022\n\n\nTyler Clark\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nR\n\n\nRstudio\n\n\ntidyverse\n\n\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\nTyler Clark\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\nTyler Clark\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/2022-09-03-my-favorite-packages/index.html",
+    "href": "posts/2022-09-03-my-favorite-packages/index.html",
+    "title": "My favorite R packages",
+    "section": "",
+    "text": "Mind Blown\nJust the %>% operator alone radically changed my workflow and caused me to refactor all of my code (Hell, even R is integrating a pipe function now |> in R 4.1+). Then learning how to use all of the data manipulation tools in dplyr (mutate, select, separate, oh how I could go on) made working with data exciting and intelligible instead of some chore full of arcane commands and confusing code.\nRMarkdown and now Quarto have given me many new avenues for reporting data, results, and analysis, even though I am still heavily tied to having to email an Excel file for some of the old-school folks (I guess if it ain’t broke…). Well, that’s why I learned some VBA too."
+  },
+  {
+    "objectID": "posts/2022-09-03-welcome/index.html",
+    "href": "posts/2022-09-03-welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "The github repository for the entire site can be found here."
   },
   {
     "objectID": "posts/2022-09-04-flatpak/index.html",
@@ -19,26 +40,5 @@
     "title": "Some Notes About Flatpak",
     "section": "Flatpak Notes",
     "text": "Flatpak Notes\nAnyway, the main notes that I meant to put here are:\n\nflatpak remote-add flathub flathub-url is not the same as sudo flatpak remote-add flathub flathub-url\n*For a single-user system there’s not that much real difference in terms of the experience, but installing flathub without sudo only installs the repo for YOU and then any apps you install get saved in /home. You do you.\nFlatpak apps are installed at /var/lib/flatpak, so keep that as a separate BTRFS subvolume to exclude them from root backups.\nFor apps, MakeMKV in particular, the app’s personal root is /app/, not /.\nUser config files and data are mostly stored per-app in ~/.var/, but some apps have access to /home/user.\nAdd /var/lib/flatpak/exports/bin to you $PATH to more easily call the apps from the command line, in case error codes need to be looked at.\n\nOverall I’m pretty happy with the change. Most of the gui programs that I use are in flathub, so that’s pretty easy. I was worried about bloat and performance, but it’s really not that bad. Apps are sandboxed, yes, but they can share Flatpak libraries and runtimes so there isn’t so much redundancy. It’s really nice when installing a single Gnome app or Wine not to have to install an entire suite of Gnome apps and multi-lib stuff just for one program."
-  },
-  {
-    "objectID": "posts/2022-09-03-welcome/index.html",
-    "href": "posts/2022-09-03-welcome/index.html",
-    "title": "Welcome To My Blog",
-    "section": "",
-    "text": "The github repository for the entire site can be found here."
-  },
-  {
-    "objectID": "posts/2022-09-03-my-favorite-packages/index.html",
-    "href": "posts/2022-09-03-my-favorite-packages/index.html",
-    "title": "My favorite R packages",
-    "section": "",
-    "text": "Mind Blown\nJust the %>% operator alone radically changed my workflow and caused me to refactor all of my code (Hell, even R is integrating a pipe function now |> in R 4.1+). Then learning how to use all of the data manipulation tools in dplyr (mutate, select, separate, oh how I could go on) made working with data exciting and intelligible instead of some chore full of arcane commands and confusing code.\nRMarkdown and now Quarto have given me many new avenues for reporting data, results, and analysis, even though I am still heavily tied to having to email an Excel file for some of the old-school folks (I guess if it ain’t broke…). Well, that’s why I learned some VBA too."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "This is a blog where I keep code snippets, thoughts, interesting analyses, or just whatever enters my mind."
   }
 ]
