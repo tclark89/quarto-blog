@@ -17,7 +17,8 @@ When I first started out doing data analysis professionally,
 **Mind Blown**
 
 Just the `%>%` operator alone radically changed my workflow and caused
-  me to refactor all of my code. Then learning how to use all of the 
+  me to refactor all of my code (Hell, even R is integrating a pipe
+  function now `|>` in R 4.1+). Then learning how to use all of the 
   data manipulation tools in `dplyr` (`mutate`, `select`, `separate`,
   oh how I could go on) made working with data exciting and intelligible
   instead of some chore full of arcane commands and confusing code.
