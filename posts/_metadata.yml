@@ -6,3 +6,9 @@ freeze: true
 
 # Enable banner style title blocks
 title-block-banner: true
+
+# Add table of contents
+toc: true
+
+# I'm the damn paterfamilias!
+author: "Tyler Clark"
