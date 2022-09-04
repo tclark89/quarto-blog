@@ -3,9 +3,11 @@ title: "Welcome To My Blog"
 author: "Tyler Clark"
 date: "2022-09-03"
 categories: [news]
+image: "portrait.jpg"
 ---
 
-Welcome to my blog. It's entirely possible that this blog is never public-
-facing, so I may just be talking to myself.
+Welcome to my blog. Currently this blog is really just a collection of 
+  ideas and code that I find useful. Maybe you will too.
 
-The github repository for the entire site can be found <a href="https://github.com/tclark89/quarto-blog">here</a>.
+The github repository for the entire site can be found 
+  <a href="https://github.com/tclark89/quarto-blog">here</a>.
