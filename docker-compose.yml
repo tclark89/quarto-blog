@@ -2,6 +2,6 @@ services:
   rstudio:
     image: httpd:2.4
     ports: 
-      - "8082:80"
+      - "80:80"
     volumes:
       - /home/tyler/code/R/quarto-blog/_site/:/usr/local/apache2/htdocs/
