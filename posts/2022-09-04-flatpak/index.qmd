@@ -4,7 +4,7 @@ author: "Tyler Clark"
 date: "2022-09-04"
 toc: true
 categories: [flatpak, linux, notes, debian, archlinux]
-image: Flatpak_Logo.svg.png
+image: "Flatpak_Logo.svg.png"
 ---
 
 ## A Distro-hopping Tale

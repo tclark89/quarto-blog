@@ -2,7 +2,8 @@
 title: "My favorite R packages"
 author: "Tyler Clark"
 date: "2022-09-03"
-categories: [news, code, analysis]
+categories: [R, Rstudio, tidyverse]
+image: "magrittr.png"
 ---
 
 When I first started out doing data analysis professionally,
