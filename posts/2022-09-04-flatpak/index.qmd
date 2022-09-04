@@ -24,7 +24,7 @@ One is not better than the other, but I was tired of having to regularly
   for any breakage news, etc. It's not so bad for a desktop that is used
   for tinkering and playing, but for a fileserver running programs that
   I'd rather not restart all the time (hold on, let me pause this show
-  on Plex and make sure my backup NAS isn't backing anything up...)
+  on Plex and make sure my backup NAS isn't syncing)...
   
 So far so good. The overall system is smaller (due to Debian breaking
   up packages while Arch installs the kitchen sink at times), and it 
