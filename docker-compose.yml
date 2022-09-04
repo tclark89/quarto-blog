@@ -4,4 +4,4 @@ services:
     ports: 
       - "80:80"
     volumes:
-      - /home/tyler/code/R/quarto-blog/_site/:/usr/local/apache2/htdocs/
+      - /home/tyler/code/R/quarto-blog/docs/:/usr/local/apache2/htdocs/
