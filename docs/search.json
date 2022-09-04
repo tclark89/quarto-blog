@@ -18,7 +18,7 @@
     "href": "posts/2022-09-03-my-favorite-packages/index.html",
     "title": "My favorite R packages",
     "section": "",
-    "text": "Mind Blown\nJust the %>% operator alone radically changed my workflow and caused me to refactor all of my code (Hell, even R is integrating a pipe function now |> in R 4.1+). Then learning how to use all of the data manipulation tools in dplyr (mutate, select, separate, oh how I could go on) made working with data exciting and intelligible instead of some chore full of arcane commands and confusing code.\nRMarkdown and now Quarto have given me many new avenues for reporting data, results, and analysis, even though I am still heavily tied to having to email an Excel file for some of the old-school folks (I guess if it ain’t broke…). Well, that’s why I learned some VBA too."
+    "text": "Mind Blown\nJust the %>% operator alone radically changed my workflow and caused me to refactor all of my code (Hell, even R is integrating a pipe function now: |> in R 4.1+). Then learning how to use all of the data manipulation tools in dplyr (mutate, select, separate, oh how I could go on) made working with data exciting and intelligible instead of some chore full of arcane commands and confusing code.\nRMarkdown and now Quarto have given me many new avenues for reporting data, results, and analysis, even though I am still heavily tied to having to email an Excel file for some of the old-school folks (I guess if it ain’t broke…). Well, that’s why I learned some VBA too."
   },
   {
     "objectID": "posts/2022-09-03-welcome/index.html",
