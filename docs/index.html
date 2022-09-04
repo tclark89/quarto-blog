@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Tyler’s Data Analysis Blog - The Blog</title>
+<title>Tyler Clark - About</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,12 +25,9 @@ ul.task-list{list-style: none;}
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -55,49 +52,19 @@ ul.task-list{list-style: none;}
     "search-submit-button-title": "Submit"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Tyler’s Data Analysis Blog</span>
+    <span class="navbar-title">Tyler Clark</span>
   </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
@@ -105,7 +72,10 @@ ul.task-list{list-style: none;}
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html">About</a>
+    <a class="nav-link" href="./blog.html">The Blog</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./archive.html">Archive</a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/tclark89/"><i class="bi bi-github" role="img">
@@ -124,171 +94,45 @@ ul.task-list{list-style: none;}
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">The Blog</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="R">R <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Rstudio">Rstudio <span class="quarto-category-count">(1)</span></div><div class="category" data-category="archlinux">archlinux <span class="quarto-category-count">(1)</span></div><div class="category" data-category="debian">debian <span class="quarto-category-count">(1)</span></div><div class="category" data-category="flatpak">flatpak <span class="quarto-category-count">(1)</span></div><div class="category" data-category="linux">linux <span class="quarto-category-count">(1)</span></div><div class="category" data-category="news">news <span class="quarto-category-count">(1)</span></div><div class="category" data-category="notes">notes <span class="quarto-category-count">(1)</span></div><div class="category" data-category="tidyverse">tidyverse <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<div class="quarto-about-jolla">
+  <img src="portrait.jpg" class="about-image
+  round " style="height: 15em; width: 15em;">
+ <header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">About</h1>
+</div>
+<div class="quarto-title-meta">
+  </div>
+</header><main class="content" id="quarto-document-content">
+<p>I am a data analyst by trade, which I largely credit to my long-time Linux and software hobbies.</p>
+<p>This is a website where I keep code snippets, thoughts, interesting analyses, or just whatever enters my mind.</p>
+<p>Click <a href="./blog.html">here</a> for my blog.</p>
+<p>This entire website is written using Quarto and Rstudio, and available on github:</p>
+<ul>
+<li><a href="https://github.com/tclark89/quarto-blog">Source Code</a></li>
+<li><a href="https://tclark89.github.io/quarto-blog/">Live Page</a></li>
+</ul>
 
 
-
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="flatpak,linux,notes,debian,archlinux" data-listing-date-sort="1662249600000" data-listing-file-modified-sort="1662312589930" data-listing-reading-time-sort="2.23">
-<div class="thumbnail">
-<p><a href="./posts/2022-09-04-flatpak/index.html"> <img src="./posts/2022-09-04-flatpak/Flatpak_Logo.svg.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2022-09-04-flatpak/index.html">
-<h3 class="no-anchor listing-title">
-Some Notes About Flatpak
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('flatpak'); return false;">
-flatpak
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('linux'); return false;">
-linux
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('notes'); return false;">
-notes
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('debian'); return false;">
-debian
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('archlinux'); return false;">
-archlinux
+</main> 
+  <hr class="about-sep">
+   <div class="about-links">
+  <a href="https://www.linkedin.com/in/tyler-clark-5b5b511b5" class="about-link">
+    <i class="bi bi-linkedin"></i>
+     <span class="about-link-text">LinkedIn</span>
+  </a>
+  <a href="https://github.com/tclark89/" class="about-link">
+    <i class="bi bi-github"></i>
+     <span class="about-link-text">Github</span>
+  </a>
 </div>
 </div>
-<a href="./posts/2022-09-04-flatpak/index.html">
-<div class="listing-description">
-After a few years of running ArchLinux on my NAS PC, I recently (a couple weeks ago?) decided to switch to a solid foundation of Debian Stable (Bullseye 11.4 at the time of this post), with most of my userland apps installed via Flatpak.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2022-09-04-flatpak/index.html">
-<div class="listing-date">
-Sep 4, 2022
-</div>
-<div class="listing-author">
-Tyler Clark
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="R,Rstudio,tidyverse" data-listing-date-sort="1662163200000" data-listing-file-modified-sort="1662313195335" data-listing-reading-time-sort="1.01">
-<div class="thumbnail">
-<p><a href="./posts/2022-09-03-my-favorite-packages/index.html"> <img src="./posts/2022-09-03-my-favorite-packages/magrittr.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2022-09-03-my-favorite-packages/index.html">
-<h3 class="no-anchor listing-title">
-My favorite R packages
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
-R
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Rstudio'); return false;">
-Rstudio
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('tidyverse'); return false;">
-tidyverse
-</div>
-</div>
-<a href="./posts/2022-09-03-my-favorite-packages/index.html">
-<div class="listing-description">
-When I first started out doing data analysis professionally, I tried not to stray from base R. Why? I’m not sure. After all, I had to install something to read Excel files… At any rate, at some point I decided to have IT install RStudio’s IDE on my laptop and to try out this “tidyverse” thing.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2022-09-03-my-favorite-packages/index.html">
-<div class="listing-date">
-Sep 3, 2022
-</div>
-<div class="listing-author">
-Tyler Clark
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="news" data-listing-date-sort="1662163200000" data-listing-file-modified-sort="1662312589930" data-listing-reading-time-sort="0.16">
-<div class="thumbnail">
-<a href="./posts/2022-09-03-welcome/index.html">
-<div class="thumbnail-image">
-
-</div>
-</a><p><a href="./posts/2022-09-03-welcome/index.html"></a></p>
-</div>
-<div class="body">
-<a href="./posts/2022-09-03-welcome/index.html">
-<h3 class="no-anchor listing-title">
-Welcome To My Blog
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('news'); return false;">
-news
-</div>
-</div>
-<a href="./posts/2022-09-03-welcome/index.html">
-<div class="listing-description">
-Welcome to my blog. It’s entirely possible that this blog is never public- facing, so I may just be talking to myself.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2022-09-03-welcome/index.html">
-<div class="listing-date">
-Sep 3, 2022
-</div>
-<div class="listing-author">
-Tyler Clark
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -309,13 +153,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
   const clipboard = new window.ClipboardJS('.code-copy-button', {
     target: function(trigger) {
       return trigger.previousElementSibling;
