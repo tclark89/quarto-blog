@@ -10,6 +10,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/2022-09-05-powerbi-loop-files/index.html",
       "/posts/2022-09-04-flatpak/index.html",
       "/posts/2022-09-03-my-favorite-packages/index.html",
       "/posts/2022-09-03-welcome/index.html"
@@ -18,6 +19,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/2022-09-05-powerbi-loop-files/index.html",
       "/posts/2022-09-04-flatpak/index.html",
       "/posts/2022-09-03-my-favorite-packages/index.html",
       "/posts/2022-09-03-welcome/index.html"
