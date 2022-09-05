@@ -19,12 +19,11 @@ I am a data analyst by trade, which I largely credit to my long-time
 This is a website where I keep code snippets, thoughts, 
   interesting analyses, or just whatever enters my mind. 
   
-Click <a href="blog.qmd">here</a> for my blog.
 
 This entire website is written using Quarto and Rstudio, and available 
   on github: 
   
-  - <a href="https://github.com/tclark89/quarto-blog">Source Code</a>
-  - <a href="https://tclark89.github.io/quarto-blog/">Live Page</a>
+<a href="https://github.com/tclark89/quarto-blog">Source Code</a>
+<a href="https://tclark89.github.io/quarto-blog/">Live Page</a>
   
   
