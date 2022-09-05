@@ -1,0 +1,122 @@
+---
+title: "Power Query Tip - Opening Multiple Files"
+date: "2022-09-05"
+categories: [Microsoft, PowerBI, M Code, Excel, code]
+image: "social-default-image.png"
+---
+
+While I prefer to use R/RMarkdown/Quarto as much as possible for data
+  wrangling and reporting, sometimes the right tool is something else.
+  Many organizations are heavily tied in to Microsoft's ecosystem and
+  it is what lots of managers and executives are familiar with. 
+  
+In this sort of environemnt, the suite of Power tools: 
+  PowerBI, Power Query, Power Pivot, etc. 
+  is a good choice. As a bonus, they play nicely with OneDrive and
+  SharePoint, and PowerBI allows for automated data updating. 
+  
+In my day-to-day I run into situations where I need to combine 
+  several Excel files that are split into chunks, say some sort of
+  accounting information that is saved in separate files per year. 
+  Power Query's GUI can help to get you started, but if you need to do 
+  any more complicated data wrangling you'll need to dive into M code.
+  
+A common template I use for the above scenario is something like this:
+```
+let
+  // Navigate to the SharePoint library (not folder) with the files.
+  Source = SharePoint.Files(
+    "https://contoso.sharepoint.com/personal/tyler_contoso_com",
+    [ApiVersion = 15]
+  ),
+  
+  // Filter the file list down to the correct folder
+  #"Filtered Folders" = Table.SelectRows(
+    Source, 
+    each [Folder Path] = "https://contoso.sharepoint.com/personal/tyler_contoso_com/Documents/Documents/Widget Exports/"),
+    
+  // Filter down to just the right files.
+  // In this example, the files are named "2022 Widget_Exports.xlsx", 
+  // "2021 Widget_exports.xlsx", etc.
+  #"Filtered Files" = Table.SelectRows(
+    #"Filtered Folders", 
+    each Text.Contains([Name], "Widget_Exports.xlsx")
+    ),
+    
+  // Excel Opener Function
+  ExcelOpener = (folderPath, fileName) => 
+  let
+    // This function nested in the main function processes all of
+    // the Excel files in the same way. It does not change the
+    // column types yet, that is saved for the end. I have had the 
+    // column type information get tossed out in a following step,
+    // that's why it doesn't get defined here.
+    // The function does name the columns. 
+    SelectFile = #"Filtered Files"{
+      [Name = fileName, 
+      #"Folder Path" = folderPath]}[Content],
+      
+      #"Imported Excel" = Excel.Workbook(SelectFile, null, true),
+      
+      #"Navigation" = #"Imported Excel"{
+      [Item = "Sheet", Kind = "Sheet"]
+      }[Data],
+      
+      #"Filtered rows" = Table.SelectRows(
+        // If there are any merged cells, this can toss unnecessary rows
+        #"Navigation", each [Column2] <> null),
+        
+      #"Promoted headers" = Table.PromoteHeaders(
+      #"Filtered rows", [PromoteAllScalars = true]
+      )
+  in
+    #"Promoted headers",
+  
+  // To use the function, make a new column and get its values from the
+  // function. It will be a nested data column.
+  #"Added Custom" = Table.AddColumn(
+    #"Filtered Files", 
+    "Custom", 
+    each ExcelOpener([Folder Path], [Name])
+    ),
+  
+  // We can remove everything but the new column  
+  #"Removed columns" = Table.RemoveColumns(
+    #"Added Custom", 
+    {"Content", "Name", "Extension", "Date accessed", 
+      "Date modified", "Date created", "Attributes", 
+      "Folder Path"}
+    ),
+  
+  // Expand the column and select all of the named columns  
+  #"Expanded Custom" = Table.ExpandTableColumn(
+    #"Removed columns", 
+    "Custom", 
+    {"Acct No", "Cust No", "PO", "Transaction Date", "Widget Type", 
+      "Widget Cost Per Unit", "Total Units", "Total Cost", 
+     "Shipped", "Shipped Date"}
+    ),
+  
+  // Now we will set the column types
+  #"Changed column type" = Table.TransformColumnTypes(
+    #"Expanded Custom", 
+    {
+      {"Acct No", type text}, 
+      {"Cust No", type text}, 
+      {"PO", type text}, 
+      {"Transaction Date", type date}, 
+      {"Widget Type", type text}, 
+      {"Widget Cost Per Unit", type number}, 
+      {"Total Units", Int64.Type}, 
+      {"Total Cost", type number}, 
+      {"Shipped", logical}, 
+      {"Shipped Date", type date}
+      }
+    )
+in
+  #"Changed column type"
+```
+
+Using code similar to this will combine the directory full of files
+  into one big Power dataset that you can now modify as needed for 
+  the analysis or report that you are using. 
