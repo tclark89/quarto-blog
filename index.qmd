@@ -1,5 +1,5 @@
 ---
-title: "About"
+title: "Tyler Clark"
 image: "portrait.jpg"
 about:
   template: solana
@@ -13,14 +13,44 @@ about:
 
 ---
 
-I am a data analyst by trade, which I largely credit to my long-time
-  Linux and software hobbies. 
+## Bio
 
-This is a website where I keep code snippets, thoughts, 
-  interesting analyses, or just whatever enters my mind. 
+I have been working as a data analyst and statistician since 2016, and
+  have always had a passion for learning, technology, and getting 
+  things done. In my spare time I enjoy tinkering with computers
+  and software, playing and writing music, settling in for a long
+  session with my smoker, or just getting outside. 
+
+## Education 
+
+- **University of Arkansas**: Fayetteville, AR | 2013-2015
+  - M.S. in Poultry Science with an emphasis on 
+    applied Statistics and Analytics
+    
+- **University of Arkansas**: Fayetteville, AR | 2007-2011
+  - BS in Poultry Science
+  - Minor in Agricultural Business
+
+- **Elkins High School**: Elkins, AR | 2003-2007
+  - Salutatorian
+  - FFA Officer
+  - FFA Poultry Judging Team State Finalist
   
 
-This entire website is written using Quarto and Rstudio, and available 
-  on 
+## Experience
+
+- **Butterball, LLC** - 2016-Present
+  - Analytics and Statistics
+  - Research
+  - Business Planning
+  - Process Control
+
+
+
+
+
+
+This website is written using Quarto and Rstudio. 
+  The source code is available on
   <a href="https://github.com/tclark89/quarto-blog">GitHub</a>
   
