@@ -1,0 +1,28 @@
+---
+title: "My RStudio Setup"
+date: "2022-09-06"
+categories: [Docker, R, RStudio, Linux]
+image: "rocker.png"
+draft: true
+---
+
+## Backstory
+
+I wrote in a 
+  <a href="../2022-09-04-flatpak/index.qmd">previous post</a>
+  that I am working on making my home NAS PC more stable, which means
+  moving more of the userland packages to containers. Most 
+  of the programs I use on that PC (Firefox, VLC, Gimp, etc.)
+  all have flatpaks that work quite well for me. 
+  
+However, R and RStudio are not in that category. On Debian, both
+  require going outside of the official Debian repositories:
+  R has a repository for up-to-date versions, while RStudio
+  does not (although they do provide binary downloads). Add to that
+  the system dependencies of some packages and now there are random
+  libraries installed all over, with no depends chain in apt.
+  
+It seemed to me that R would need it's own environment.
+  How best to do that? I turned to
+  <a href="https://www.docker.com/">Docker</a> for this particular
+  case.
