@@ -20,9 +20,82 @@ However, R and RStudio are not in that category. On Debian, both
   R has a repository for up-to-date versions, while RStudio
   does not (although they do provide binary downloads). Add to that
   the system dependencies of some packages and now there are random
-  libraries installed all over, with no depends chain in apt.
+  libraries installed all over, with no dependency chain in apt.
   
 It seemed to me that R would need it's own environment.
   How best to do that? I turned to
   <a href="https://www.docker.com/">Docker</a> for this particular
   case.
+
+[![Docker](vertical-logo-monochromatic.png){width=30%}](https://www.docker.com/ "Docker")
+
+## Docker Setup
+
+Luckily, smarter people than myself have already run into this situation
+  and started the 
+  <a href="https://rocker-project.org/">Rocker Project</a>. They
+  have many different containers all built in layers on each other
+  so that it's easy to find a good starting point for running R/shiny 
+  apps, or building a general dev environment like I was looking for. 
+  
+At the time of this post I chose the `rocker/tidyverse` image to build my
+  RStudio environment, but this could change in the future (see my 
+  <a href="https://github.com/tclark89/tidyverse-extra">repo</a>
+  for the latest). Having Rstudio server and the tidyverse packages
+  gets me 90% of the way to where I want to be, but there are other 
+  packages that I use quite a bit. To get those packages I would either
+  need to 
+  
+- Option 1:
+  - Spin up an image, 
+  - Download the packages in the image
+  - Save that modified environment as a new image
+
+- Option 2:
+  - Create a Dockerfile with the appropriate steps
+
+I am a big fan of keeping things simple, reproducible, 
+  and mostly in line with the intended workflow
+  (sometimes rules are made to be broken, but I am not familiar enough
+  with docker to be getting my hands _that_ dirty just yet) 
+  so I went with Option 2. 
+  
+At the time of this post, this is the Dockerfile:
+```dockerfile
+FROM rocker/tidyverse:4.2.1
+COPY packages.R /home/rstudio/packages.R
+RUN R -q -e "source('/home/rstudio/packages.R')" \
+	&& rm -rf /tmp/* \
+	&& strip /usr/local/lib/R/site-library/*/libs/*.so
+```
+
+I start with the `rocker/tidyverse:4.2.1` image, then copy an
+  R script into the rstudio home directory:
+
+```r
+install.packages(
+		 c(
+		   "rmarkdown",
+		   "gt", 
+		   "DT", 
+		   "kableExtra", 
+		   "flextable", 
+		   "huxtable", 
+		   "reactable", 
+		   "formattable", 
+		   "pixiedust", 
+		   "agricolae", 
+		   "car"
+		 )
+)
+```
+
+After the script is run, I execute 2 more commands to clean up the image
+  (as advised by the 
+  <a href="https://rocker-project.org/use/extending.html#install-binary-packages">Rocker team</a>). 
+  This image is available on 
+  <a href="https://hub.docker.com/repository/docker/tclark89/tidyverse-extra">Docker Hub</a>
+  as `tclark89/tidyverse-extra`
+  
+Now that the image has been created it needs to be run, and it needs to
+  be run with certain parameters. 
