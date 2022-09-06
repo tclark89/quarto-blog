@@ -1,0 +1,26 @@
+Using RStudio in OneDrive/SharePoint environment 
+- ("~/../../") paths
+- NO PROJECTS + NO GIT
+- lots of scripts with loops (purrr::map_dfr)
+  - use previously mentioned paths
+  - no library loading for file-reader scripts.
+- Always Keep on Device
+- Folders with lots of Excel files: "2020 widget report.xlsx", "2021 widget report", etc. 
+
+
+Home 3-2-1 system
+
+
+Continue adding to quarto-tables file, but also break it into separate pages
+  and blog about each in a series of posts. 
+  
+  
+SPC CHARTS
+  package up previous efforts?
+  
+  
+PowerBI workflow tips and ideas
+
+
+
+shiny app with custom reporting via parameters
