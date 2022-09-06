@@ -1,8 +1,9 @@
 ---
-title: "My RStudio Setup"
+title: "My Home RStudio Setup"
 date: "2022-09-06"
 categories: [Docker, Rocker Project, R, RStudio, Linux]
 image: "rocker.png"
+draft: true
 ---
 
 ## Backstory
@@ -104,11 +105,12 @@ After the script is run, I execute 2 more commands to clean up the image
   
 ### Compose 
 
-Now that the image has been created it needs to be run, and it needs to
-  be run with certain parameters. The best way to do that is with a 
-  `docker-compose.yml` file. Currently mine looks like this:
+Now that the image has been created it needs to be spun up, and it needs to
+  be run with certain parameters. 
+  The best way to do that is with a `docker-compose.yml` file.
+  Currently mine looks like this:
   
-```dockerfile
+```yml
 services:
   rstudio:
     image: tclark89/tidyverse-extra:4.2.1
@@ -121,5 +123,26 @@ services:
       - ~/.config/rstudio:/home/rstudio/.config/rstudio
       - ~/.local/share/rstudio:/home/rstudio/.local/share/rstudio
       - ~/code/R:/home/rstudio/workspace
-
 ```
+
+The `docker-compose.yml` file starts the `rstudio` service:
+
+- Uses my custom docker image as the base
+- Maps the container ports
+- Sets the rstudio user's password and gives it sudo via 
+  <a href="https://rocker-project.org/images/versioned/rstudio.html#environment-variables">
+  environment variables</a>
+- Maps some directories to be shared between host and container. This lets 
+  settings and files persist in my `/home` directory between sessions. 
+  
+The rocker team provides an example 
+  <a href="https://rocker-project.org/images/versioned/rstudio.html#editing-work-on-rstudio-server">
+  compose file</a> as well. 
+  
+  
+### Running the Container
+
+All it takes to run the docker container now is to `cd` to the directory with
+  the docker-compose.yml file and issue the command: `docker compose up`. 
+  However, I would like for this to happen automatically so I can just login and
+  go. The final piece for me was a systemd service file. 
