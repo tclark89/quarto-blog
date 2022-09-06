@@ -31,13 +31,17 @@ It seemed to me that R would need it's own environment.
 
 ## Docker Setup
 
+### Base Image
+
 Luckily, smarter people than myself have already run into this situation
   and started the 
   <a href="https://rocker-project.org/">Rocker Project</a>. They
   have many different containers all built in layers on each other
   so that it's easy to find a good starting point for running R/shiny 
   apps, or building a general dev environment like I was looking for. 
-  
+
+### Adding on Layers
+
 At the time of this post I chose the `rocker/tidyverse` image to build my
   RStudio environment, but this could change in the future (see my 
   <a href="https://github.com/tclark89/tidyverse-extra">repo</a>
@@ -59,7 +63,9 @@ I am a big fan of keeping things simple, reproducible,
   (sometimes rules are made to be broken, but I am not familiar enough
   with docker to be getting my hands _that_ dirty just yet) 
   so I went with Option 2. 
-  
+
+### Configuration
+
 At the time of this post, this is the Dockerfile:
 ```dockerfile
 FROM rocker/tidyverse:4.2.1
@@ -75,7 +81,7 @@ I start with the `rocker/tidyverse:4.2.1` image, then copy an
 ```r
 install.packages(
 		 c(
-		   "rmarkdown",
+		   "markdown",
 		   "gt", 
 		   "DT", 
 		   "kableExtra", 
@@ -97,5 +103,24 @@ After the script is run, I execute 2 more commands to clean up the image
   <a href="https://hub.docker.com/repository/docker/tclark89/tidyverse-extra">Docker Hub</a>
   as `tclark89/tidyverse-extra`
   
+### Compose 
+
 Now that the image has been created it needs to be run, and it needs to
-  be run with certain parameters. 
+  be run with certain parameters. The best way to do that is with a 
+  `docker-compose.yml` file. Currently mine looks like this:
+  
+```dockerfile
+services:
+  rstudio:
+    image: tclark89/tidyverse-extra:4.2.1
+    ports: 
+      - "8787:8787"
+    environment:
+      PASSWORD: rstudio
+      ROOT: true
+    volumes:
+      - ~/.config/rstudio:/home/rstudio/.config/rstudio
+      - ~/.local/share/rstudio:/home/rstudio/.local/share/rstudio
+      - ~/code/R:/home/rstudio/workspace
+
+```
