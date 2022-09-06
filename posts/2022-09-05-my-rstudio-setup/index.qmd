@@ -1,9 +1,8 @@
 ---
 title: "My RStudio Setup"
 date: "2022-09-06"
-categories: [Docker, R, RStudio, Linux]
+categories: [Docker, Rocker Project, R, RStudio, Linux]
 image: "rocker.png"
-draft: true
 ---
 
 ## Backstory
