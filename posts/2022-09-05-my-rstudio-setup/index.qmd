@@ -146,3 +146,38 @@ All it takes to run the docker container now is to `cd` to the directory with
   the docker-compose.yml file and issue the command: `docker compose up`. 
   However, I would like for this to happen automatically so I can just login and
   go. The final piece for me was a systemd service file. 
+  
+After some digging through the Arch Wiki and various SO posts I settled on the 
+  following:
+
+```ini
+[Unit]
+Description=%i service with docker compose
+PartOf=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+WorkingDirectory=/home/%u/docker/compose/%i
+ExecStart=/usr/bin/docker compose up -d --remove-orphans
+ExecStop=/usr/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target
+```
+
+This service file is a user `@.service`, so the file is named 
+  `docker-compose@.service`
+  and called via 
+  `systemctl start --user docker-compose@tidyverse-extra.service` or
+  `systemctl enable --now --user docker-compose@tidyverse-extra.service` for a
+  persistant setup.
+  Because   `docker compose` looks for a `docker-compose.yml` file in the working
+  directory, I needed to specify one in this file and make sure that directory
+  existed in my `/home`. The `%u` makes this file user-agnostic and the `%i` and
+  `@` make it usable for any other docker service I may decide to use later, I just
+  need to make sure that I create a directory in `~/docker/compose/` and put the
+  `docker-compose.yml` file there. 
+  
+## Using RStudio
