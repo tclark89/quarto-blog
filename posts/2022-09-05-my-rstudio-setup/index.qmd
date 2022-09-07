@@ -1,15 +1,27 @@
 ---
-title: "My RStudio Setup"
+title: "My Home RStudio Setup"
 date: "2022-09-06"
 categories: [Docker, Rocker Project, R, RStudio, Linux]
 image: "rocker.png"
+draft: true
 ---
+
+
+When I am working on, well, work-related work, I use my company-issued laptop
+  with Windows, Microsoft Office tools, and an installation of RStudio
+  Desktop. 
+  
+Recently I have been wanting to setup a personal installation of RStudio on my
+  home file server as well. 
+  The main reasons being that RStudio makes for a great general-purpose IDE, 
+  and I've been wanting to start working with Quarto
+  on some things, so right now seemed like a great time to figure it out. 
 
 ## Backstory
 
 I wrote in a 
   <a href="../2022-09-04-flatpak/index.qmd">previous post</a>
-  that I am working on making my home NAS PC more stable, which means
+  that I am working on making my home file server more stable, which means
   moving more of the userland packages to containers. Most 
   of the programs I use on that PC (Firefox, VLC, Gimp, etc.)
   all have flatpaks that work quite well for me. 
@@ -19,7 +31,7 @@ However, R and RStudio are not in that category. On Debian, both
   R has a repository for up-to-date versions, while RStudio
   does not (although they do provide binary downloads). Add to that
   the system dependencies of some packages and now there are random
-  libraries installed all over, with no dependency chain in apt.
+  libraries installed all over, with no dependency chain in apt. 
   
 It seemed to me that R would need it's own environment.
   How best to do that? I turned to
@@ -32,11 +44,11 @@ It seemed to me that R would need it's own environment.
 
 ### Base Image
 
-Luckily, smarter people than myself have already run into this situation
+Luckily, smarter people than myself have already thought about this
   and started the 
   <a href="https://rocker-project.org/">Rocker Project</a>. They
   have many different containers all built in layers on each other
-  so that it's easy to find a good starting point for running R/shiny 
+  so it's easy to find a good starting point for running R/shiny 
   apps, or building a general dev environment like I was looking for. 
 
 ### Adding on Layers
@@ -66,6 +78,7 @@ I am a big fan of keeping things simple, reproducible,
 ### Configuration
 
 At the time of this post, this is the Dockerfile:
+
 ```dockerfile
 FROM rocker/tidyverse:4.2.1
 COPY packages.R /home/rstudio/packages.R
@@ -102,13 +115,18 @@ After the script is run, I execute 2 more commands to clean up the image
   <a href="https://hub.docker.com/repository/docker/tclark89/tidyverse-extra">Docker Hub</a>
   as `tclark89/tidyverse-extra`
   
+One day I may dig more deeply into setting up my own very custom image by starting
+  a little closer to do-it-from-scratch, but for now the `rocker/tidyverse` image 
+  works as great jumping-off point. 
+  
 ### Compose 
 
-Now that the image has been created it needs to be run, and it needs to
-  be run with certain parameters. The best way to do that is with a 
-  `docker-compose.yml` file. Currently mine looks like this:
+Now that the image has been created it needs to be spun up, and it needs to
+  be run with certain parameters. 
+  The best way to do that is with a `docker-compose.yml` file.
+  Currently mine looks like this:
   
-```dockerfile
+```yml
 services:
   rstudio:
     image: tclark89/tidyverse-extra:4.2.1
@@ -121,5 +139,82 @@ services:
       - ~/.config/rstudio:/home/rstudio/.config/rstudio
       - ~/.local/share/rstudio:/home/rstudio/.local/share/rstudio
       - ~/code/R:/home/rstudio/workspace
-
 ```
+
+The `docker-compose.yml` file starts the `rstudio` service:
+
+- Uses my custom docker image as the base
+- Maps the container ports
+- Sets the rstudio user's password and gives it sudo via 
+  <a href="https://rocker-project.org/images/versioned/rstudio.html#environment-variables">
+  environment variables</a>
+- Maps some directories to be shared between host and container. This lets 
+  settings and files persist in my `/home` directory between sessions. 
+  
+The rocker team provides an example 
+  <a href="https://rocker-project.org/images/versioned/rstudio.html#editing-work-on-rstudio-server">
+  compose file</a> as well. 
+  
+  
+### Running the Container
+
+All it takes to run the docker container now is to `cd` to the directory with
+  the docker-compose.yml file and issue the command: `docker compose up`. 
+  However, I would like for this to happen automatically so I can just login and
+  go. The final piece for me was a systemd service file. 
+  
+After some digging through the Arch Wiki and various SO posts I settled on the 
+  following:
+
+```ini
+[Unit]
+Description=%i service with docker compose
+PartOf=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+WorkingDirectory=/home/%u/docker/compose/%i
+ExecStart=/usr/bin/docker compose up -d --remove-orphans
+ExecStop=/usr/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target
+```
+
+This service file is a user `@.service`, so the file is named 
+  `docker-compose@.service`
+  and called via 
+  `systemctl start --user docker-compose@tidyverse-extra.service` or
+  `systemctl enable --now --user docker-compose@tidyverse-extra.service` for a
+  persistent setup.
+  Because   `docker compose` looks for a `docker-compose.yml` file in the working
+  directory, I needed to specify one in this file and make sure that directory
+  existed in my `/home`. The `%u` makes this file user-agnostic and the `%i` and
+  `@` make it usable for any other docker service I may decide to use later. 
+  I just need to make sure that I create a directory in `~/docker/compose/` 
+  and put the `docker-compose.yml` file there. 
+
+
+As a final note, this will only work if your user is part of the docker group,
+  otherwise docker needs root privileges. This file could just as easily be made
+  to work as root, but the docker-compose.yml file would need to have literal
+  paths instead of user-relative ones. 
+  
+## Using RStudio
+
+Now that all of the pieces are in place, all I have to do to access RStudio at
+  home is to open my Chromebook, access my NAS PC 
+  (creatively named `fileserver`), at fileserver:8787, and log in to RStudio Server.
+  Then I can just `git pull` and get back to work on this website or whatever 
+  project I am focused on.
+  
+For now this all works wonderfully. I don't have to muck around with dependencies
+  on my server, and saving the docker files to GitHub and the image to Docker Hub
+  means that it should be reproducible in case I change PCs or have some sort of
+  catastrophic system failure. For instance, if I am away from home but want to 
+  work on a project I can spin up the docker image directly on my Chromebook
+  (or any computer with Docker) and fire away. 
+  In fact, you can even run this image in a browser via Docker Playground, 
+  though it eats up quite a bit of RAM to do so.  
