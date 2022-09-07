@@ -31,7 +31,10 @@ However, R and RStudio are not in that category. On Debian, both
   R has a repository for up-to-date versions, while RStudio
   does not (although they do provide binary downloads). Add to that
   the system dependencies of some packages and now there are random
-  libraries installed all over, with no dependency chain in apt. 
+  libraries installed all over, with no dependency chain in apt. There is the
+  option to use the Debian packages from the CRAN repository, but those are 
+  not complete and have given me issues in the past, as far as permissions, 
+  updates, etc. 
   
 It seemed to me that R would need it's own environment.
   How best to do that? I turned to
@@ -64,20 +67,20 @@ At the time of this post I chose the `rocker/tidyverse` image to build my
 - Option 1:
   - Spin up an image, 
   - Download the packages in the image
-  - Save that modified environment as a new image
+  - Save that modified environment as a new image via `docker commit`
 
 - Option 2:
-  - Create a Dockerfile with the appropriate steps
+  - Create a Dockerfile and let `docker build` handle it
 
 I am a big fan of keeping things simple, reproducible, 
   and mostly in line with the intended workflow
   (sometimes rules are made to be broken, but I am not familiar enough
-  with docker to be getting my hands _that_ dirty just yet) 
+  with docker to be getting my hands _that_ dirty just yet), 
   so I went with Option 2. 
 
 ### Configuration
 
-At the time of this post, this is the Dockerfile:
+At the time of this post, this is my Dockerfile:
 
 ```dockerfile
 FROM rocker/tidyverse:4.2.1
@@ -115,8 +118,8 @@ After the script is run, I execute 2 more commands to clean up the image
   <a href="https://hub.docker.com/repository/docker/tclark89/tidyverse-extra">Docker Hub</a>
   as `tclark89/tidyverse-extra`
   
-One day I may dig more deeply into setting up my own very custom image by starting
-  a little closer to do-it-from-scratch, but for now the `rocker/tidyverse` image 
+One day I may dig more deeply into setting up my own _very_ custom image by 
+  building something more from scratch, but for now the `rocker/tidyverse` image 
   works as great jumping-off point. 
   
 ### Compose 
@@ -161,7 +164,7 @@ The rocker team provides an example
 All it takes to run the docker container now is to `cd` to the directory with
   the docker-compose.yml file and issue the command: `docker compose up`. 
   However, I would like for this to happen automatically so I can just login and
-  go. The final piece for me was a systemd service file. 
+  go. There may be a different way to do this, but I went with a systemd service file. 
   
 After some digging through the Arch Wiki and various SO posts I settled on the 
   following:
@@ -204,23 +207,23 @@ Because   `docker compose` looks for a `docker-compose.yml` file in the working
 
 As a final note, this will only work if your user is part of the docker group,
   otherwise docker needs root privileges. This file could just as easily be made
-  to work as root, but the docker-compose.yml file would need to have literal
+  to work as root, but the docker-compose.yml file would need to have absolute
   paths instead of user-relative ones. 
   
 ## Using RStudio
 
 Now that all of the pieces are in place, all I have to do to access RStudio at
-  home is to open my Chromebook, access my NAS PC 
-  (creatively named `fileserver`), at fileserver:8787, and log in to RStudio Server.
+  home is to open a broswer, access my file server at port 8787, 
+  and log in to RStudio Server.
   Then I can just `git pull` and get back to work on this website or whatever 
   project I am focused on.
   
 For now this all works wonderfully. I don't have to muck around with dependencies
   on my server, and saving the docker files to GitHub and the image to Docker Hub
-  means that it should be reproducible in case I change PCs or have some sort of
-  catastrophic system failure. For instance, if I am away from home but want to 
+  means that it should be reproducible in case I can't access the server. 
+  For instance, if I am away from home but want to 
   work on a project I can spin up the docker image directly on my Chromebook
-  (or any computer with Docker) and fire away. 
+  (via the built-in Linux VM) and fire away. 
   In fact, you can even run this image in a browser via
-  <a href="https://labs.play-with-docker.com/">Play with Docker</a>
+  <a href="https://labs.play-with-docker.com/">Play with Docker</a>,
   though it eats up quite a bit of RAM to do so.  
