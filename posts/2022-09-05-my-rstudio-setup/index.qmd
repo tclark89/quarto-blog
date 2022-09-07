@@ -3,6 +3,7 @@ title: "My Home RStudio Setup"
 date: "2022-09-06"
 categories: [Docker, Rocker Project, R, RStudio, Linux]
 image: "rocker.png"
+draft: true
 ---
 
 
