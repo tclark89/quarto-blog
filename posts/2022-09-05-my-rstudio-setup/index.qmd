@@ -185,11 +185,16 @@ WantedBy=multi-user.target
 
 This service file is a user `@.service`, so the file is named 
   `docker-compose@.service`
-  and called via 
-  `systemctl start --user docker-compose@tidyverse-extra.service` or
-  `systemctl enable --now --user docker-compose@tidyverse-extra.service` for a
-  persistent setup.
-  Because   `docker compose` looks for a `docker-compose.yml` file in the working
+  and called via:
+  
+> `systemctl start --user docker-compose@tidyverse-extra.service` 
+
+or for a persistent setup:
+
+> `systemctl enable --now --user docker-compose@tidyverse-extra.service` 
+
+  
+Because   `docker compose` looks for a `docker-compose.yml` file in the working
   directory, I needed to specify one in this file and make sure that directory
   existed in my `/home`. The `%u` makes this file user-agnostic and the `%i` and
   `@` make it usable for any other docker service I may decide to use later. 
@@ -216,5 +221,6 @@ For now this all works wonderfully. I don't have to muck around with dependencie
   catastrophic system failure. For instance, if I am away from home but want to 
   work on a project I can spin up the docker image directly on my Chromebook
   (or any computer with Docker) and fire away. 
-  In fact, you can even run this image in a browser via Docker Playground, 
+  In fact, you can even run this image in a browser via
+  <a href="https://labs.play-with-docker.com/">Play with Docker</a>
   though it eats up quite a bit of RAM to do so.  
