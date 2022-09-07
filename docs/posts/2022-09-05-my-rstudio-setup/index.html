@@ -9,7 +9,7 @@
 <meta name="author" content="Tyler Clark">
 <meta name="dcterms.date" content="2022-09-06">
 
-<title>Tyler Clark - My RStudio Setup</title>
+<title>Tyler Clark - My Home RStudio Setup</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -163,7 +163,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">My RStudio Setup</h1>
+      <h1 class="title">My Home RStudio Setup</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">Docker</div>
                 <div class="quarto-category">Rocker Project</div>
@@ -209,7 +209,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#adding-on-layers" id="toc-adding-on-layers" class="nav-link" data-scroll-target="#adding-on-layers">Adding on Layers</a></li>
   <li><a href="#configuration" id="toc-configuration" class="nav-link" data-scroll-target="#configuration">Configuration</a></li>
   <li><a href="#compose" id="toc-compose" class="nav-link" data-scroll-target="#compose">Compose</a></li>
+  <li><a href="#running-the-container" id="toc-running-the-container" class="nav-link" data-scroll-target="#running-the-container">Running the Container</a></li>
   </ul></li>
+  <li><a href="#using-rstudio" id="toc-using-rstudio" class="nav-link" data-scroll-target="#using-rstudio">Using RStudio</a></li>
   </ul>
 </nav>
     </div>
@@ -219,9 +221,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
+<p>When I am working on, well, work-related work, I use my company-issued laptop with Windows, Microsoft Office tools, and an installation of RStudio Desktop.</p>
+<p>Recently I have been wanting to setup a personal installation of RStudio on my home file server as well. The main reasons being that RStudio makes for a great general-purpose IDE, and I’ve been wanting to start working with Quarto on some things, so right now seemed like a great time to figure it out.</p>
 <section id="backstory" class="level2">
 <h2 class="anchored" data-anchor-id="backstory">Backstory</h2>
-<p>I wrote in a <a href="../../posts/2022-09-04-flatpak/index.html">previous post</a> that I am working on making my home NAS PC more stable, which means moving more of the userland packages to containers. Most of the programs I use on that PC (Firefox, VLC, Gimp, etc.) all have flatpaks that work quite well for me.</p>
+<p>I wrote in a <a href="../../posts/2022-09-04-flatpak/index.html">previous post</a> that I am working on making my home file server more stable, which means moving more of the userland packages to containers. Most of the programs I use on that PC (Firefox, VLC, Gimp, etc.) all have flatpaks that work quite well for me.</p>
 <p>However, R and RStudio are not in that category. On Debian, both require going outside of the official Debian repositories: R has a repository for up-to-date versions, while RStudio does not (although they do provide binary downloads). Add to that the system dependencies of some packages and now there are random libraries installed all over, with no dependency chain in apt.</p>
 <p>It seemed to me that R would need it’s own environment. How best to do that? I turned to <a href="https://www.docker.com/">Docker</a> for this particular case.</p>
 <div class="quarto-figure quarto-figure-center">
@@ -235,7 +239,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="docker-setup">Docker Setup</h2>
 <section id="base-image" class="level3">
 <h3 class="anchored" data-anchor-id="base-image">Base Image</h3>
-<p>Luckily, smarter people than myself have already run into this situation and started the <a href="https://rocker-project.org/">Rocker Project</a>. They have many different containers all built in layers on each other so that it’s easy to find a good starting point for running R/shiny apps, or building a general dev environment like I was looking for.</p>
+<p>Luckily, smarter people than myself have already thought about this and started the <a href="https://rocker-project.org/">Rocker Project</a>. They have many different containers all built in layers on each other so it’s easy to find a good starting point for running R/shiny apps, or building a general dev environment like I was looking for.</p>
 </section>
 <section id="adding-on-layers" class="level3">
 <h3 class="anchored" data-anchor-id="adding-on-layers">Adding on Layers</h3>
@@ -279,25 +283,68 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>         )</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>After the script is run, I execute 2 more commands to clean up the image (as advised by the <a href="https://rocker-project.org/use/extending.html#install-binary-packages">Rocker team</a>). This image is available on <a href="https://hub.docker.com/repository/docker/tclark89/tidyverse-extra">Docker Hub</a> as <code>tclark89/tidyverse-extra</code></p>
+<p>One day I may dig more deeply into setting up my own very custom image by starting a little closer to do-it-from-scratch, but for now the <code>rocker/tidyverse</code> image works as great jumping-off point.</p>
 </section>
 <section id="compose" class="level3">
 <h3 class="anchored" data-anchor-id="compose">Compose</h3>
-<p>Now that the image has been created it needs to be run, and it needs to be run with certain parameters. The best way to do that is with a <code>docker-compose.yml</code> file. Currently mine looks like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>services:</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  rstudio:</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    image: tclark89/tidyverse-extra:4.2.1</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    ports: </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      - <span class="st">"8787:8787"</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    environment:</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      PASSWORD: rstudio</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      ROOT: true</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    volumes:</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      - ~/.config/rstudio:/home/rstudio/.config/rstudio</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      - ~/.local/share/rstudio:/home/rstudio/.local/share/rstudio</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      - ~/code/R:/home/rstudio/workspace</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-
+<p>Now that the image has been created it needs to be spun up, and it needs to be run with certain parameters. The best way to do that is with a <code>docker-compose.yml</code> file. Currently mine looks like this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">rstudio</span><span class="kw">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> tclark89/tidyverse-extra:4.2.1</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"8787:8787"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">PASSWORD</span><span class="kw">:</span><span class="at"> rstudio</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ROOT</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ~/.config/rstudio:/home/rstudio/.config/rstudio</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ~/.local/share/rstudio:/home/rstudio/.local/share/rstudio</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ~/code/R:/home/rstudio/workspace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>docker-compose.yml</code> file starts the <code>rstudio</code> service:</p>
+<ul>
+<li>Uses my custom docker image as the base</li>
+<li>Maps the container ports</li>
+<li>Sets the rstudio user’s password and gives it sudo via <a href="https://rocker-project.org/images/versioned/rstudio.html#environment-variables"> environment variables</a></li>
+<li>Maps some directories to be shared between host and container. This lets settings and files persist in my <code>/home</code> directory between sessions.</li>
+</ul>
+<p>The rocker team provides an example <a href="https://rocker-project.org/images/versioned/rstudio.html#editing-work-on-rstudio-server"> compose file</a> as well.</p>
 </section>
+<section id="running-the-container" class="level3">
+<h3 class="anchored" data-anchor-id="running-the-container">Running the Container</h3>
+<p>All it takes to run the docker container now is to <code>cd</code> to the directory with the docker-compose.yml file and issue the command: <code>docker compose up</code>. However, I would like for this to happen automatically so I can just login and go. The final piece for me was a systemd service file.</p>
+<p>After some digging through the Arch Wiki and various SO posts I settled on the following:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[Unit]</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Description</span><span class="ot">=</span><span class="st">%i service with docker compose</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">PartOf</span><span class="ot">=</span><span class="st">docker.service</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">After</span><span class="ot">=</span><span class="st">docker.service</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">[Service]</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Type</span><span class="ot">=</span><span class="st">oneshot</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dt">RemainAfterExit</span><span class="ot">=</span><span class="kw">true</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="dt">WorkingDirectory</span><span class="ot">=</span><span class="st">/home/%u/docker/compose/%i</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="dt">ExecStart</span><span class="ot">=</span><span class="st">/usr/bin/docker compose up -d --remove-orphans</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="dt">ExecStop</span><span class="ot">=</span><span class="st">/usr/bin/docker-compose down</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">[Install]</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="dt">WantedBy</span><span class="ot">=</span><span class="st">multi-user.target</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This service file is a user <code>@.service</code>, so the file is named <code>docker-compose@.service</code> and called via:</p>
+<blockquote class="blockquote">
+<p><code>systemctl start --user docker-compose@tidyverse-extra.service</code></p>
+</blockquote>
+<p>or for a persistent setup:</p>
+<blockquote class="blockquote">
+<p><code>systemctl enable --now --user docker-compose@tidyverse-extra.service</code></p>
+</blockquote>
+<p>Because <code>docker compose</code> looks for a <code>docker-compose.yml</code> file in the working directory, I needed to specify one in this file and make sure that directory existed in my <code>/home</code>. The <code>%u</code> makes this file user-agnostic and the <code>%i</code> and <code>@</code> make it usable for any other docker service I may decide to use later. I just need to make sure that I create a directory in <code>~/docker/compose/</code> and put the <code>docker-compose.yml</code> file there.</p>
+<p>As a final note, this will only work if your user is part of the docker group, otherwise docker needs root privileges. This file could just as easily be made to work as root, but the docker-compose.yml file would need to have literal paths instead of user-relative ones.</p>
+</section>
+</section>
+<section id="using-rstudio" class="level2">
+<h2 class="anchored" data-anchor-id="using-rstudio">Using RStudio</h2>
+<p>Now that all of the pieces are in place, all I have to do to access RStudio at home is to open my Chromebook, access my NAS PC (creatively named <code>fileserver</code>), at fileserver:8787, and log in to RStudio Server. Then I can just <code>git pull</code> and get back to work on this website or whatever project I am focused on.</p>
+<p>For now this all works wonderfully. I don’t have to muck around with dependencies on my server, and saving the docker files to GitHub and the image to Docker Hub means that it should be reproducible in case I change PCs or have some sort of catastrophic system failure. For instance, if I am away from home but want to work on a project I can spin up the docker image directly on my Chromebook (or any computer with Docker) and fire away. In fact, you can even run this image in a browser via <a href="https://labs.play-with-docker.com/">Play with Docker</a> though it eats up quite a bit of RAM to do so.</p>
+
+
 </section>
 
 </main> <!-- /main -->
