@@ -2,11 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<<<<<<< HEAD
 <meta name="generator" content="quarto-1.0.38">
-=======
-<meta name="generator" content="quarto-1.0.36">
->>>>>>> 1365f31a4d05a0a57918144bcbdd95c2f770e6e3
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -226,18 +222,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <p>When I am working on, well, work-related work, I use my company-issued laptop with Windows, Microsoft Office tools, and an installation of RStudio Desktop.</p>
-<<<<<<< HEAD
-<p>Recently I have been wanting to setup a personal installation of RStudio on my home file server (creatively named <code>fileserver</code>) as well. RStudio makes for a great general-purpose IDE, and I’ve been wanting to start working with Quarto on some things so right now seemed like a great time to figure it out.</p>
-<section id="backstory" class="level2">
-<h2 class="anchored" data-anchor-id="backstory">Backstory</h2>
-<p>I wrote in a <a href="../../posts/2022-09-04-flatpak/index.html">previous post</a> that I am working on making my home NAS PC more stable, which means moving more of the userland packages to containers. Most of the programs I use on that PC (Firefox, VLC, Gimp, etc.) all have flatpaks that work quite well for me.</p>
-=======
 <p>Recently I have been wanting to setup a personal installation of RStudio on my home file server as well. The main reasons being that RStudio makes for a great general-purpose IDE, and I’ve been wanting to start working with Quarto on some things, so right now seemed like a great time to figure it out.</p>
 <section id="backstory" class="level2">
 <h2 class="anchored" data-anchor-id="backstory">Backstory</h2>
 <p>I wrote in a <a href="../../posts/2022-09-04-flatpak/index.html">previous post</a> that I am working on making my home file server more stable, which means moving more of the userland packages to containers. Most of the programs I use on that PC (Firefox, VLC, Gimp, etc.) all have flatpaks that work quite well for me.</p>
->>>>>>> 1365f31a4d05a0a57918144bcbdd95c2f770e6e3
-<p>However, R and RStudio are not in that category. On Debian, both require going outside of the official Debian repositories: R has a repository for up-to-date versions, while RStudio does not (although they do provide binary downloads). Add to that the system dependencies of some packages and now there are random libraries installed all over, with no dependency chain in apt.</p>
+<p>However, R and RStudio are not in that category. On Debian, both require going outside of the official Debian repositories: R has a repository for up-to-date versions, while RStudio does not (although they do provide binary downloads). Add to that the system dependencies of some packages and now there are random libraries installed all over, with no dependency chain in apt. There is the option to use the Debian packages from the CRAN repository, but those are not complete and have given me issues in the past, as far as permissions, updates, etc.</p>
 <p>It seemed to me that R would need it’s own environment. How best to do that? I turned to <a href="https://www.docker.com/">Docker</a> for this particular case.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -250,11 +239,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="docker-setup">Docker Setup</h2>
 <section id="base-image" class="level3">
 <h3 class="anchored" data-anchor-id="base-image">Base Image</h3>
-<<<<<<< HEAD
-<p>Luckily, smarter people than myself have already run into this situation and started the <a href="https://rocker-project.org/">Rocker Project</a>. They have many different containers all built in layers on each other so that it’s easy to find a good starting point for running R/shiny apps, or building a general dev environment like I was looking for.</p>
-=======
 <p>Luckily, smarter people than myself have already thought about this and started the <a href="https://rocker-project.org/">Rocker Project</a>. They have many different containers all built in layers on each other so it’s easy to find a good starting point for running R/shiny apps, or building a general dev environment like I was looking for.</p>
->>>>>>> 1365f31a4d05a0a57918144bcbdd95c2f770e6e3
 </section>
 <section id="adding-on-layers" class="level3">
 <h3 class="anchored" data-anchor-id="adding-on-layers">Adding on Layers</h3>
@@ -264,18 +249,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Spin up an image,</li>
 <li>Download the packages in the image</li>
-<li>Save that modified environment as a new image</li>
+<li>Save that modified environment as a new image via <code>docker commit</code></li>
 </ul></li>
 <li>Option 2:
 <ul>
-<li>Create a Dockerfile with the appropriate steps</li>
+<li>Create a Dockerfile and let <code>docker build</code> handle it</li>
 </ul></li>
 </ul>
-<p>I am a big fan of keeping things simple, reproducible, and mostly in line with the intended workflow (sometimes rules are made to be broken, but I am not familiar enough with docker to be getting my hands <em>that</em> dirty just yet) so I went with Option 2.</p>
+<p>I am a big fan of keeping things simple, reproducible, and mostly in line with the intended workflow (sometimes rules are made to be broken, but I am not familiar enough with docker to be getting my hands <em>that</em> dirty just yet), so I went with Option 2.</p>
 </section>
 <section id="configuration" class="level3">
 <h3 class="anchored" data-anchor-id="configuration">Configuration</h3>
-<p>At the time of this post, this is the Dockerfile:</p>
+<p>At the time of this post, this is my Dockerfile:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rocker/tidyverse:4.2.1</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> packages.R /home/rstudio/packages.R</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-q</span> <span class="at">-e</span> <span class="st">"source('/home/rstudio/packages.R')"</span> <span class="dt">\</span></span>
@@ -298,7 +283,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>         )</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>After the script is run, I execute 2 more commands to clean up the image (as advised by the <a href="https://rocker-project.org/use/extending.html#install-binary-packages">Rocker team</a>). This image is available on <a href="https://hub.docker.com/repository/docker/tclark89/tidyverse-extra">Docker Hub</a> as <code>tclark89/tidyverse-extra</code></p>
-<p>One day I may dig more deeply into setting up my own very custom image by starting a little closer to do-it-from-scratch, but for now the <code>rocker/tidyverse</code> image works as great jumping-off point.</p>
+<p>One day I may dig more deeply into setting up my own <em>very</em> custom image by building something more from scratch, but for now the <code>rocker/tidyverse</code> image works as great jumping-off point.</p>
 </section>
 <section id="compose" class="level3">
 <h3 class="anchored" data-anchor-id="compose">Compose</h3>
@@ -326,7 +311,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="running-the-container" class="level3">
 <h3 class="anchored" data-anchor-id="running-the-container">Running the Container</h3>
-<p>All it takes to run the docker container now is to <code>cd</code> to the directory with the docker-compose.yml file and issue the command: <code>docker compose up</code>. However, I would like for this to happen automatically so I can just login and go. The final piece for me was a systemd service file.</p>
+<p>All it takes to run the docker container now is to <code>cd</code> to the directory with the docker-compose.yml file and issue the command: <code>docker compose up</code>. However, I would like for this to happen automatically so I can just login and go. There may be a different way to do this, but I went with a systemd service file.</p>
 <p>After some digging through the Arch Wiki and various SO posts I settled on the following:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[Unit]</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Description</span><span class="ot">=</span><span class="st">%i service with docker compose</span></span>
@@ -342,9 +327,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">[Install]</span></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="dt">WantedBy</span><span class="ot">=</span><span class="st">multi-user.target</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<<<<<<< HEAD
-<p>This service file is a user <code>@.service</code>, so the file is named <code>docker-compose@.service</code> and called via <code>systemctl start --user docker-compose@tidyverse-extra.service</code> or <code>systemctl enable --now --user docker-compose@tidyverse-extra.service</code> for a persistent setup. Because <code>docker compose</code> looks for a <code>docker-compose.yml</code> file in the working directory, I needed to specify one in this file and make sure that directory existed in my <code>/home</code>. The <code>%u</code> makes this file user-agnostic and the <code>%i</code> and <code>@</code> make it usable for any other docker service I may decide to use later. I just need to make sure that I create a directory in <code>~/docker/compose/</code> and put the <code>docker-compose.yml</code> file there.</p>
-=======
 <p>This service file is a user <code>@.service</code>, so the file is named <code>docker-compose@.service</code> and called via:</p>
 <blockquote class="blockquote">
 <p><code>systemctl start --user docker-compose@tidyverse-extra.service</code></p>
@@ -354,18 +336,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><code>systemctl enable --now --user docker-compose@tidyverse-extra.service</code></p>
 </blockquote>
 <p>Because <code>docker compose</code> looks for a <code>docker-compose.yml</code> file in the working directory, I needed to specify one in this file and make sure that directory existed in my <code>/home</code>. The <code>%u</code> makes this file user-agnostic and the <code>%i</code> and <code>@</code> make it usable for any other docker service I may decide to use later. I just need to make sure that I create a directory in <code>~/docker/compose/</code> and put the <code>docker-compose.yml</code> file there.</p>
->>>>>>> 1365f31a4d05a0a57918144bcbdd95c2f770e6e3
-<p>As a final note, this will only work if your user is part of the docker group, otherwise docker needs root privileges. This file could just as easily be made to work as root, but the docker-compose.yml file would need to have literal paths instead of user-relative ones.</p>
+<p>As a final note, this will only work if your user is part of the docker group, otherwise docker needs root privileges. This file could just as easily be made to work as root, but the docker-compose.yml file would need to have absolute paths instead of user-relative ones.</p>
 </section>
 </section>
 <section id="using-rstudio" class="level2">
 <h2 class="anchored" data-anchor-id="using-rstudio">Using RStudio</h2>
-<p>Now that all of the pieces are in place, all I have to do to access RStudio at home is to open my Chromebook, access my NAS PC (creatively named <code>fileserver</code>), at fileserver:8787, and log in to RStudio Server. Then I can just <code>git pull</code> and get back to work on this website or whatever project I am focused on.</p>
-<<<<<<< HEAD
-<p>For now this all works wonderfully. I don’t have to muck around with dependencies on my server, and saving the docker files to GitHub and the image to Docker Hub means that it should be reproducible in case I change PCs or have some sort of catastrophic system failure. For instance, if I am away from home but want to work on a project I can spin up the docker image directly on my Chromebook (or any computer with Docker) and fire away. In fact, you can even run this image in a browser via Docker Playground, though it eats up quite a bit of RAM to do so.</p>
-=======
-<p>For now this all works wonderfully. I don’t have to muck around with dependencies on my server, and saving the docker files to GitHub and the image to Docker Hub means that it should be reproducible in case I change PCs or have some sort of catastrophic system failure. For instance, if I am away from home but want to work on a project I can spin up the docker image directly on my Chromebook (or any computer with Docker) and fire away. In fact, you can even run this image in a browser via <a href="https://labs.play-with-docker.com/">Play with Docker</a> though it eats up quite a bit of RAM to do so.</p>
->>>>>>> 1365f31a4d05a0a57918144bcbdd95c2f770e6e3
+<p>Now that all of the pieces are in place, all I have to do to access RStudio at home is to open a broswer, access my file server at port 8787, and log in to RStudio Server. Then I can just <code>git pull</code> and get back to work on this website or whatever project I am focused on.</p>
+<p>For now this all works wonderfully. I don’t have to muck around with dependencies on my server, and saving the docker files to GitHub and the image to Docker Hub means that it should be reproducible in case I can’t access the server. For instance, if I am away from home but want to work on a project I can spin up the docker image directly on my Chromebook (via the built-in Linux VM) and fire away. In fact, you can even run this image in a browser via <a href="https://labs.play-with-docker.com/">Play with Docker</a>, though it eats up quite a bit of RAM to do so.</p>
 
 
 </section>
