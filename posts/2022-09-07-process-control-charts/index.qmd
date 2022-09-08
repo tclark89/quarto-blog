@@ -9,3 +9,11 @@ blah blah blah
 
 
 <a href="https://www.itl.nist.gov/div898/handbook/index.htm">link</a>
+
+< a href="http://www.bessegato.com.br/UFJF/resources/table_of_control_chart_constants_old.pdf">another link</a>
+
+<a href="https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT">45. LITHOGRA.DAT - lithography process (process control)</a>
+
+<a href="https://www.itl.nist.gov/div898/handbook/datasets/MONITOR-6_3_3_1.DAT">57. MONITOR-6_3_3_1.DAT - defects in wafers (counts based control charts)</a>
+
+<a href="https://www.itl.nist.gov/div898/handbook/datasets/NEGIZ4.DAT">68. NEGIZ4.DAT - lithography process (process control)</a>
