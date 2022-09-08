@@ -21,11 +21,13 @@ colorKey <- c("Beyond Limits"="red",
               "Normal"="black")
 
 # C4 Function
+# used for S charts (when n>10)
 c4 <- function(n) {
   sqrt(2/(n-1)) * (factorial(n/2-1) / factorial((n-1)/2-1))
 }
 
 # D2 Function
+# used for R charts (n<=10)
 d2 <- function (n){
   n[n == 1] <- 2
   
@@ -39,6 +41,9 @@ d2 <- function (n){
     numeric(1))
 }
 
+#A2, can be used for UCL and LCL on R charts
+a2 <- function(n){3 / (d2(n)*sqrt(n))}
+
 
 # Process/Summarise the data ####
 
@@ -48,22 +53,32 @@ dataSPCSumm <- dataSPC |>
   # Mean, SD, and Count for each run
   summarise(measMean = mean(meas, na.rm=T),
             measSD = sd(meas, na.rm=T),
+            measR = diff(range(meas, na.rm=T)),
             count = n()) |> 
   ungroup() |> 
   # Overall process Mean and SD
   mutate(
     processMean = mean(measMean, na.rm=T),
-    processSD = mean(measSD, na.rm=T)
+    processSD = mean(measSD, na.rm=T),
+    processR = mean(measR, na.rm=T)
   )
 
 
 # X-Bar Calculations
 dataXBar <- dataSPCSumm |> 
   mutate(
+    
+    
+    # for X-bar & S charts
     # Upper Limit
     UL = processMean + 3*processSD/(c4(count)*sqrt(count)),
     # Lower Limit
     LL = processMean - 3*processSD/(c4(count)*sqrt(count)),
+    
+    # For X-bar and R charts
+    # UL = processMean + a2(count) * processR,
+    # LL = processMean - a2(count) * processR,
+    
     # Are we out of bounds (1=Yes, 0=No) ?
     beyondLimit = if_else(!is.na(measSD) & (measMean > UL | measMean < LL), 1, 0),
     # Violating runs: too many consecutive runs above or below process mean
