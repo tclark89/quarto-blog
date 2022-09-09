@@ -6,7 +6,7 @@ fileLitho <- read_file("https://www.itl.nist.gov/div898/handbook/datasets/LITHOG
 
 dataLitho <- read_fwf(fileLitho, 
          col_positions = fwf_empty(
-           fileLith, 
+           fileLitho, 
            skip=25,
            col_names=c("CASSETTE", 
                        "WAFER", 
