@@ -7,6 +7,9 @@ draft: true
 
 blah blah blah
 
+X-Bar and S (Std. Dev, >10 samples per run/group)
+X-Bar and R (run range, <= 10 per run/group)
+X-Bar and M (change, when there is only 1 measure per group)
 
 <a href="https://www.itl.nist.gov/div898/handbook/index.htm">link</a>
 
