@@ -4,6 +4,26 @@ date: 9/8/2022
 draft: true
 ---
 
+```{r}
+library(qcc)
+```
+https://datascienceplus.com/implementation-and-interpretation-of-control-charts-in-r/
+https://www.r-bloggers.com/2018/08/using-control-charts-in-r/
+
+
+```{r}
+library(qicharts)
+```
+https://cran.r-project.org/web/packages/qicharts/vignettes/controlcharts.html
+
+
+```{r}
+library(ggQC)
+```
+https://r-bar.net/ggqc-ggplot-quality-control-charts/
+https://www.r-bloggers.com/2019/02/testing-out-ggqc/
+
+
 
 blah blah blah
 
