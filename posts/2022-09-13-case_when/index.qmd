@@ -1,5 +1,31 @@
 ---
 title: "Dplyr's case_when"
 image: "dplyr-logo.png"
+tags: ["tidyverse", "dplyr", "notes", "code"]
 ---
 
+This is a very small post that's really more of a note-to-self. I wind up using 
+  nested `if_else` statements a lot, but `dplyr` contains a nifty function that
+  really eliminates the need for them and in turn cleans up the code. The 
+  `case_when` function operates very similarly to `CASE WHEN THEN ELSE` in SQL:
+
+**SQL**
+```sql
+SELECT 
+  CASE 
+    WHEN x = 1 THEN 'a'
+    WHEN x = 2 THEN 'b'
+    WHEN x = 3 THEN 'c'
+    ELSE 'd'
+  END  
+```
+
+**dplyr**
+```r
+case_when(
+  x == 1 ~ "a",
+  x == 2 ~ "b",
+  x == 3 ~ "c",
+  TRUE ~ "d"
+)
+```
