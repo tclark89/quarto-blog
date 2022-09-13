@@ -1,7 +1,7 @@
 ---
 title: "Dplyr's case_when"
 image: "dplyr-logo.png"
-tags: ["tidyverse", "dplyr", "notes", "code"]
+categories: [tidyverse, dplyr, notes, code, R]
 ---
 
 This is a very small post that's really more of a note-to-self. I wind up using 
