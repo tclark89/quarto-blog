@@ -29,3 +29,101 @@ case_when(
   TRUE ~ "d"
 )
 ```
+
+Like in SQL, `dplyr::case_when()` works its way down the list of conditionals
+  in the order that they appear. It's good practice to include the `TRUE ~ result`
+  statement at the end. Sometimes you may want an "other" result, other times
+  you may just want to make sure that you've caught all the rows. 
+
+For a more detailed example:
+
+```{r}
+#| label: libraries
+#| message: false
+
+
+# Let's load some libraries:
+library(tibble)
+library(dplyr)
+
+```
+
+```{r}
+#| lable: mtcars-rownames
+
+# I'll use mtcars, and we'll look at the car model
+mtcarsMod <- mtcars |> 
+  rownames_to_column(var="model")
+head(mtcarsMod)
+```
+
+Let's say that we want to add the manufacturer as a separate column. There are a 
+  few ways to do it:
+  
+  
+### Nested if_else
+
+The first way that always enters my head is to do nested if_else statements. It's
+  not terrible when there are only a few options, but they get ugly fast:
+  
+```{r}
+#| label: nested-ifs
+
+mtcarsMod |> 
+  mutate(make = if_else(grepl("Mazda", model), "Mazda", 
+                        if_else(grepl("Hornet", model), "Hornet",
+                                if_else(grepl("Merc", model), "Mercury",
+                                        if_else(grepl("Datsun", model), "Datsun", 
+                                                # etc.
+                                                "Other"))))) |> 
+  select(make, names(mtcarsMod)) |>
+  rmarkdown::paged_table()
+```
+  
+
+### Multiple mutates
+
+One way to make things cleaner is to do multiple mutates. 
+  Create the new column with your "catch-all" value, then use conditional statements
+  that leave the new column unchanged when the condition is FALSE:
+  
+```{r}
+#| label: multi-mutate
+
+mtcarsMod |> 
+  mutate(
+    make = "Other",
+    make = if_else(grepl("Mazda", model), "Mazda", make),
+    make = if_else(grepl("Hornet", model), "Hornet", make),
+    make = if_else(grepl("Merc", model), "Mercury", make),
+    make = if_else(grepl("Datsun", model), "Datsun", make)
+    # etc.
+  ) |> 
+  select(make, names(mtcarsMod)) |>
+  rmarkdown::paged_table()
+```
+
+### case_when
+
+But the cleanest way (IMHO) is to use case_when. I don't know why I always forget
+  about it, but maybe the act of making this post will permanently etch it into
+  my brain.
+  
+```{r}
+#| label: case_when
+
+mtcarsMod |> 
+  mutate(make = case_when(
+    grepl("Mazda", model) ~ "Mazda",
+    grepl("Hornet", model) ~ "Hornet",
+    grepl("Merc", model) ~ "Mercury",
+    grepl("Datsun", model) ~ "Datsun",
+    # etc.
+    TRUE ~ "Other"
+  )) |> 
+   select(make, names(mtcarsMod)) |>
+  rmarkdown::paged_table()
+```
+
+
+
