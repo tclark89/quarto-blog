@@ -1,5 +1,6 @@
 ---
 title: "Dplyr's case_when"
+date: "2022-09-13"
 image: "dplyr-logo.png"
 categories: [tidyverse, dplyr, notes, code, R]
 ---
