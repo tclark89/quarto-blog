@@ -10,6 +10,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/2022-09-13-case_when/index.html",
       "/posts/2022-09-07-my-rstudio-setup/index.html",
       "/posts/2022-09-05-powerbi-loop-files/index.html",
       "/posts/2022-09-04-flatpak/index.html",
@@ -20,6 +21,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/2022-09-13-case_when/index.html",
       "/posts/2022-09-07-my-rstudio-setup/index.html",
       "/posts/2022-09-05-powerbi-loop-files/index.html",
       "/posts/2022-09-04-flatpak/index.html",
