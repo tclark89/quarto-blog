@@ -26,3 +26,7 @@ Machine learning:
 
 shiny app with custom reporting via parameters
   calorie calculator
+  
+deboostrap instructions
+  systemd networking
+  systemd in general missing from Debian official guide
