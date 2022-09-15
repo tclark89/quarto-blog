@@ -10,7 +10,9 @@ about:
     - icon: github
       text: Github
       href: https://github.com/tclark89/
-
+    - icon: envelope
+      text: Email
+      href: mailto:tylerclark2@gmail.com
 ---
 
 ## Bio
