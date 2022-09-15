@@ -15,7 +15,7 @@ website:
         href: https://www.linkedin.com/in/tyler-clark-5b5b511b5
 format:
   html:
-    theme: cosmo
+    theme: lumen
     css: styles.css
 
 
