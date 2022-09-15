@@ -4,6 +4,8 @@ project:
 
 website:
   title: "Tyler Clark"
+  site-url: https://tclark89.github.io/quarto-blog/
+  description: "Tyler's personal blog"
   navbar:
     right:
       - blog.qmd
@@ -13,6 +15,8 @@ website:
         href: https://github.com/tclark89/
       - icon: linkedin
         href: https://www.linkedin.com/in/tyler-clark-5b5b511b5
+      - icon: rss
+        href: blog.xml
 format:
   html:
     theme: lumen
