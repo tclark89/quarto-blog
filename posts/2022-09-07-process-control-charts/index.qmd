@@ -12,9 +12,9 @@ https://www.r-bloggers.com/2018/08/using-control-charts-in-r/
 
 
 ```{r}
-library(qicharts)
+library(qicharts2)
 ```
-https://cran.r-project.org/web/packages/qicharts/vignettes/controlcharts.html
+https://cran.r-project.org/web/packages/qicharts2/vignettes/qicharts2.html
 
 
 ```{r}
@@ -23,7 +23,7 @@ library(ggQC)
 https://r-bar.net/ggqc-ggplot-quality-control-charts/
 https://www.r-bloggers.com/2019/02/testing-out-ggqc/
 
-
+<a href="https://www.google.com/search?q=process+control&domains=r-project.org&sitesearch=r-project.org">And many more...</a>
 
 blah blah blah
 
