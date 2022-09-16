@@ -64,6 +64,18 @@ dataSPCSumm <- dataSPC |>
   )
 
 
+# non-dplyr version
+aggregate(LINEWIDT~CASSETTE, 
+          data=lithograph, 
+          function(x) c(
+            Mean = mean(x, na.rm=T), 
+            SD = sd(x, na.rm=T), 
+            Range=diff(range(x, na.rm=T)), 
+            Count=length(x)))
+
+
+
+
 # X-Bar Calculations
 dataXBar <- dataSPCSumm |> 
   mutate(
