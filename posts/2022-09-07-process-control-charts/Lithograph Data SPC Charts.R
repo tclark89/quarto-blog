@@ -17,6 +17,7 @@ dataLitho <- read_fwf(
 ) |> 
   select(-LINEWIDT_2)
 
+# Functions ####
 # C4 Function
 # used for S charts (when n>10)
 c4 <- function(n) {
@@ -42,6 +43,7 @@ d2 <- function (n){
 a2 <- function(n){3 / (d2(n)*sqrt(n))}
 
 
+# Initial Summarization ####
 dataLithoSumm <- dataLitho |> 
   group_by(CASSETTE) |> 
   # Mean, SD, and Count for each run
@@ -57,6 +59,8 @@ dataLithoSumm <- dataLitho |>
     processR = mean(measR, na.rm=T)
   ) 
 
+
+# Examining the data ####
 plotFunction <- function(data, yVar){
   data |> 
     ggplot(aes(x=CASSETTE, y={{ yVar }})) +
@@ -86,3 +90,55 @@ dataLithoSumm |>
 dataLithoSumm |> 
   select(starts_with("process")) |> 
   distinct()
+
+
+
+
+
+# X-Bar Calculations ####
+dataXBar <- dataLithoSumm |> 
+  mutate(
+    
+    
+    # for X-bar & S charts
+    # Upper Limit
+    UL = processMean + 3*processSD/(c4(count)*sqrt(count)),
+    # Lower Limit
+    LL = processMean - 3*processSD/(c4(count)*sqrt(count)),
+    
+    # For X-bar and R charts
+    # UL = processMean + a2(count) * processR,
+    # LL = processMean - a2(count) * processR,
+    
+    # Are we out of bounds (1=Yes, 0=No) ?
+    beyondLimit = if_else(!is.na(measSD) & (measMean > UL | measMean < LL), 1, 0),
+    # Violating runs: too many consecutive runs above or below process mean
+    # First determine if above (1) or below (-1)
+    posPoint = if_else(measMean > processMean, 1, 
+                       if_else(measMean < processMean, -1, 0)),
+    # Find the cumulative sum (2 in a row above is 1+1=2, etc.)
+    posSum = cumsum((posPoint)),
+    # Lag. make sure i know what this is doing....
+    posLag = posSum - lag(posSum, 7, default = 0),
+    # If 7 or more consecutive runs above or below then "violating run" 
+    violatingRun = if_else(abs(posLag)>=7, 1, 0),
+    # Classify; Beyond Limits overrides Violating Run
+    measClass=if_else(beyondLimit == 1, "Beyond Limits", 
+                      if_else(violatingRun==1, "Violating Run", "Normal"))
+  )
+
+# Color code
+colorKey <- c("Beyond Limits"="red", 
+              "Violating Run"="orange", 
+              "Normal"="black")
+
+dataXBar |> 
+  ggplot(aes(x=CASSETTE, y=measMean)) + 
+  geom_line(aes(color="Normal")) +
+  geom_point(aes(color=measClass)) +
+  geom_step(aes(y=UL), lty=2) +
+  geom_step(aes(y=LL), lty=2) +
+  geom_hline(aes(yintercept = processMean, color="Normal")) +
+  scale_color_manual(values=colorKey) +
+  labs(x="Cassette", y="Mean Line Width", color="Class") +
+  theme_bw()
