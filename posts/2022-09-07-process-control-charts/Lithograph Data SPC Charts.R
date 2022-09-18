@@ -99,7 +99,6 @@ dataLithoSumm |>
 dataXBar <- dataLithoSumm |> 
   mutate(
     
-    
     # for X-bar & S charts
     # Upper Limit
     UL = processMean + 3*processSD/(c4(count)*sqrt(count)),
@@ -107,8 +106,8 @@ dataXBar <- dataLithoSumm |>
     LL = processMean - 3*processSD/(c4(count)*sqrt(count)),
     
     # For X-bar and R charts
-    # UL = processMean + a2(count) * processR,
-    # LL = processMean - a2(count) * processR,
+    # UL = processMean + 3*processSD/(d2(count)*sqrt(count) * processR,
+    # LL = processMean - 3*processSD/(d2(count)*sqrt(count) * processR,
     
     # Are we out of bounds (1=Yes, 0=No) ?
     beyondLimit = if_else(!is.na(measSD) & (measMean > UL | measMean < LL), 1, 0),
@@ -118,7 +117,7 @@ dataXBar <- dataLithoSumm |>
                        if_else(measMean < processMean, -1, 0)),
     # Find the cumulative sum (2 in a row above is 1+1=2, etc.)
     posSum = cumsum((posPoint)),
-    # Lag. make sure i know what this is doing....
+    # Use lag to subtract the current score from the 7th previous.
     posLag = posSum - lag(posSum, 7, default = 0),
     # If 7 or more consecutive runs above or below then "violating run" 
     violatingRun = if_else(abs(posLag)>=7, 1, 0),
