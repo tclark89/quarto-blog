@@ -1,10 +1,11 @@
 ---
 title: "Process Control Charts"
-date: 9/8/2022
+date: "9/18/2022"
 draft: true
 ---
 
 ```{r}
+#| eval: false
 library(qcc)
 ```
 https://datascienceplus.com/implementation-and-interpretation-of-control-charts-in-r/
@@ -12,18 +13,20 @@ https://www.r-bloggers.com/2018/08/using-control-charts-in-r/
 
 
 ```{r}
+#| eval: false
 library(qicharts2)
 ```
 https://cran.r-project.org/web/packages/qicharts2/vignettes/qicharts2.html
 
 
 ```{r}
+#| eval: false
 library(ggQC)
 ```
 https://r-bar.net/ggqc-ggplot-quality-control-charts/
 https://www.r-bloggers.com/2019/02/testing-out-ggqc/
 
-<a href="https://www.google.com/search?q=process+control&domains=r-project.org&sitesearch=r-project.org">And many more...</a>
+[And many more...](https://www.google.com/search?q=process+control&domains=r-project.org&sitesearch=r-project.org)
 
 blah blah blah
 
@@ -31,12 +34,19 @@ X-Bar and S (Std. Dev, >10 samples per run/group)
 X-Bar and R (run range, <= 10 per run/group)
 X-Bar and M (change, when there is only 1 measure per group)
 
-<a href="https://www.itl.nist.gov/div898/handbook/index.htm">link</a>
+[NIST Handbook](https://www.itl.nist.gov/div898/handbook/index.htm)
 
-< a href="http://www.bessegato.com.br/UFJF/resources/table_of_control_chart_constants_old.pdf">another link</a>
+[Table of Constants](http://www.bessegato.com.br/UFJF/resources/table_of_control_chart_constants_old.pdf)
 
-<a href="https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT">45. LITHOGRA.DAT - lithography process (process control)</a>
+[45. LITHOGRA.DAT - lithography process (process control)](https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT)
 
-<a href="https://www.itl.nist.gov/div898/handbook/datasets/MONITOR-6_3_3_1.DAT">57. MONITOR-6_3_3_1.DAT - defects in wafers (counts based control charts)</a>
+[57. MONITOR-6_3_3_1.DAT - defects in wafers (counts based control charts)](https://www.itl.nist.gov/div898/handbook/datasets/MONITOR-6_3_3_1.DAT)
 
-<a href="https://www.itl.nist.gov/div898/handbook/datasets/NEGIZ4.DAT">68. NEGIZ4.DAT - lithography process (process control)</a>
+[68. NEGIZ4.DAT - lithography process (process control)](https://www.itl.nist.gov/div898/handbook/datasets/NEGIZ4.DAT)
+
+
+```{r}
+#| label: lithograph-data
+#| child: "lithograph_control_charts.qmd"
+```
+
