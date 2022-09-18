@@ -1,0 +1,9 @@
+
+## Lithograph Data
+
+Let's look at an example of creating a set of X-bar and S charts.
+  We'll use the 
+  [Lithograph](https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT) 
+  dataset from the NIST handbook.
+  
+  
