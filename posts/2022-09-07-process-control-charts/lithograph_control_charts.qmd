@@ -67,6 +67,7 @@ library(ggplot2)
   
 ```{r}
 #| label: hitogram-litho
+#| fig-cap: "Distribution of Linewidth"
 dataLitho |> 
   ggplot(aes(x=LINEWIDT)) +
   geom_histogram(bins=10)
@@ -78,10 +79,19 @@ Let's use box-and-whisker plots to check out the groups.
 
 ```{r}
 #| label: boxplot-litho-cassette
+#| fig-cap: "Linewidth by Cassette"
 dataLitho |> 
   ggplot(aes(x=CASSETTE, y=LINEWIDT, group=CASSETTE)) +
   geom_boxplot()
 ```
+```{r}
+#| label: model-litho-cassette
+modelCassette <- lm(LINEWIDT~CASSETTE, data=dataLitho)
+summary(modelCassette)
+```
+
+It looks like there is some change in line width as the process goes on. 
+  This is exactly the sort of thing that SPC charts look for. 
 
 ```{r}
 #| label: boxplot-litho-wafer
@@ -91,8 +101,146 @@ dataLitho |>
 ```
 
 ```{r}
+#| label: model-litho-wafer
+modelWafer <- lm(LINEWIDT~WAFER, data=dataLitho)
+summary(modelWafer)
+```
+
+Wafer number in the cassette doesn't look like it has any effect on the line
+  width. That's good to know. 
+
+```{r}
 #| label: boxplot-litho-site
 dataLitho |> 
   ggplot(aes(x=SITE, y=LINEWIDT, group=SITE)) +
   geom_boxplot()
 ```
+
+  
+```{r}
+#| label: model-litho-site
+modelSite <- lm(LINEWIDT~SITE, data=dataLitho)
+summary(modelSite)
+
+```
+  
+
+There appears to be a slight trend in line width based on the location of the 
+  measurement on the wafer. For now we won't worry about this since it looks fairly
+  consistent within site. In real-life you'd probably also want to look at all
+  the various multi-factor groupings, but for brevity we'll just focus on the 
+  measured line width by cassette number.
+  
+### Initial SPC Calculations
+
+The first step of creating the SPC charts is to find the mean, standard deviation,
+  and count of measurements in each group. This can be done in base R using
+  `aggregate()` and `transform()`, or with `dplyr` functions. Both methods are
+  shown below:
+  
+::: {.panel-tabset}
+
+#### base R
+```{r}
+#| label: summ-litho-base
+
+dataLithoSumm <- aggregate(
+  # group LINEWIDT by CASSETTE
+  LINEWIDT~CASSETTE, 
+  data=dataLitho,
+  # Calculate group mean, sd, and counts
+  FUN=function(x) c(mean=mean(x), 
+                    sd=sd(x), 
+                    count=length(x))
+)
+
+# We get a funky data.frame from aggregate with 1 normal column and 1 matrix column. 
+# do.call will expand the matrix into separate columns. 
+# It's a bit like nest and unnest in dplyr. 
+dataLithoSumm <- do.call(data.frame, dataLithoSumm)
+
+
+dataLithoSumm <- transform(
+  dataLithoSumm,
+  
+  # Now we calculate the mean of means (x-bar-bar in the NIST handbook)
+  process.mean = mean(LINEWIDT.mean),
+
+  # and the mean of the standard deviations
+  process.sd = mean(LINEWIDT.sd)
+  )
+
+
+```
+
+With some nesting and use of R's native pipe, this could all be run as one command,
+  but it starts to look messy, and code legibility is important in itself. 
+  I'd save that approach for use in an automated but well-documented function.
+
+#### dplyr
+```{r}
+#| label: summ-litho-dplyr
+#| message: false
+
+library(dplyr)
+
+dataLithoSumm <- dataLitho |> 
+  
+  # first set the group
+  group_by(CASSETTE) |> 
+  
+  # Mean, SD, and Count for each run
+  summarise(LINEWIDT.mean = mean(LINEWIDT),
+            LINEWIDT.sd = sd(LINEWIDT),
+            LINEWIDT.count = n()) |> 
+  
+  # Ungroup the data for the next step
+  ungroup() |> 
+  
+  # Overall process Mean and SD
+  mutate(
+    process.mean = mean(LINEWIDT.mean),
+    process.sd = mean(LINEWIDT.sd)
+  ) 
+```
+
+:::
+
+The only difference in the output is that base R produces a data.frame and dplyr
+  produces a 
+  [tibble](https://tibble.tidyverse.org/), 
+  but a 
+  [tibble is really just a data.frame with some extra polish.](https://r4ds.had.co.nz/tibbles.html)
+  
+Now that we have some summary data, let's take a look at it:
+
+::: {.panel-tabset}
+
+#### Mean
+
+```{r}
+#| label: litho-plot-mean
+#| fig-cap: "Mean Linewidth by Cassette and Overall"
+
+dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.mean)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(aes(yintercept = process.mean))
+```
+
+
+#### Standard Deviation
+
+```{r}
+#| label: litho-plot-sd
+#| fig-cap: "Std. Dev. of Linewidth by Cassette"
+
+dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.sd)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(aes(yintercept = process.sd))
+```
+
+:::
