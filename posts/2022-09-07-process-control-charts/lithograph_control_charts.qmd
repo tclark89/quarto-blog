@@ -4,6 +4,41 @@
 Let's look at an example of creating a set of X-bar and S charts.
   We'll use the 
   [Lithograph](https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT) 
-  dataset from the NIST handbook.
+  dataset from the NIST handbook. This data measures the width of lines
+  etched on 5 locations of silicon wafers. 
+  There are 3 wafers per cassette, and 30 cassettes for a grand 
+  total of 450 measurements. 
   
+There are many different approaches we could take to how to group this
+  data, but for now, lets consider the cassette as our "run" and examine
+  the distribution of line widths for each cassette, regardless of the
+  wafer number (1, 2, or 3) or the location of the line. 
   
+### Reading the data
+
+We'll use `readr::read_fwf()` to read this data since it is in a 
+  fixed-width format. We'll also drop the last column as it is not
+  necessary (see the text in the file header for more details).
+```{r}
+#| label: load-litho-data
+#| message: false
+library(readr)
+
+# LITHOGRA.DAT ####
+# The width of a line on a silicon wafer
+fileLitho <- read_file("https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT")
+# add blog link after publishing?
+
+dataLitho <- read_fwf(
+  fileLitho, 
+  col_positions = fwf_widths(
+    c(7, 7, 7, 12, 7, 12),
+    col_names=c("CASSETTE", "WAFER", "SITE", "LINEWIDT", "RUNSEQ","LINEWIDT_2")
+    ),
+  skip=25
+) |> 
+  subset(select=-c(LINEWIDT_2))
+
+head(dataLitho)
+```
+
