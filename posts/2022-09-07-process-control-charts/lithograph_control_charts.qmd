@@ -52,6 +52,8 @@ head(dataLitho)
 summary(dataLitho)
 ```
 
+### Explore the data
+
 The first step of any data analysis, even when you have a clear goal
   in mind, should be to explore the data and get a feel for what is
   going on in there. Let's load `ggplot` (we'll need it later anyway)
