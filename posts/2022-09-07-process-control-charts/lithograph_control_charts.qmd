@@ -5,7 +5,7 @@ Let's look at an example of creating a set of X-bar and S charts.
   We'll use the 
   [Lithograph](https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT) 
   dataset from the NIST handbook. This data measures the width of lines
-  etched on 5 locations of silicon wafers. 
+  etched in 5 locations on silicon wafers. 
   There are 3 wafers per cassette, and 30 cassettes for a grand 
   total of 450 measurements. 
   
