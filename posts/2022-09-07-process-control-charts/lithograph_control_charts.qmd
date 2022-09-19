@@ -19,26 +19,78 @@ There are many different approaches we could take to how to group this
 We'll use `readr::read_fwf()` to read this data since it is in a 
   fixed-width format. We'll also drop the last column as it is not
   necessary (see the text in the file header for more details).
+  
 ```{r}
 #| label: load-litho-data
 #| message: false
 library(readr)
 
-# LITHOGRA.DAT ####
-# The width of a line on a silicon wafer
+# Load the link, or download the .DAT file and substitute in the next step.
 fileLitho <- read_file("https://www.itl.nist.gov/div898/handbook/datasets/LITHOGRA.DAT")
-# add blog link after publishing?
 
+# read
 dataLitho <- read_fwf(
   fileLitho, 
   col_positions = fwf_widths(
     c(7, 7, 7, 12, 7, 12),
-    col_names=c("CASSETTE", "WAFER", "SITE", "LINEWIDT", "RUNSEQ","LINEWIDT_2")
+    col_names=c("CASSETTE", "WAFER", "SITE", 
+                "LINEWIDT", "RUNSEQ","LINEWIDT_2")
     ),
   skip=25
 ) |> 
   subset(select=-c(LINEWIDT_2))
+```
 
+
+```{r}
+#| label: head-litho
 head(dataLitho)
 ```
 
+```{r}
+#| label: summary-litho
+summary(dataLitho)
+```
+
+The first step of any data analysis, even when you have a clear goal
+  in mind, should be to explore the data and get a feel for what is
+  going on in there. Let's load `ggplot` (we'll need it later anyway)
+  and poke around.
+  
+```{r}
+#| label: load-ggplot
+library(ggplot2)
+```
+
+  
+```{r}
+#| label: hitogram-litho
+dataLitho |> 
+  ggplot(aes(x=LINEWIDT)) +
+  geom_histogram(bins=10)
+
+```
+
+The data looks normal, so that's good. 
+Let's use box-and-whisker plots to check out the groups.
+
+```{r}
+#| label: boxplot-litho-cassette
+dataLitho |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT, group=CASSETTE)) +
+  geom_boxplot()
+```
+
+```{r}
+#| label: boxplot-litho-wafer
+dataLitho |> 
+  ggplot(aes(x=WAFER, y=LINEWIDT, group=WAFER)) +
+  geom_boxplot()
+```
+
+```{r}
+#| label: boxplot-litho-site
+dataLitho |> 
+  ggplot(aes(x=SITE, y=LINEWIDT, group=SITE)) +
+  geom_boxplot()
+```
