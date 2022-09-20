@@ -1,0 +1,10 @@
+---
+title: "Using R and RStudio with OneDrive/SharePoint"
+date: 2022-09-20
+image: "Microsoft_Office_OneDrive_(2019-present).svg.png"
+categories: [note, R, RStudio, Microsoft, OneDrive, SharePoint]
+---
+
+Love it or hate it, but Microsoft is fairly ubiquitous in any business environment.
+  That could be reliance on Excel spreadsheets and Word documents up to full-blown
+  Azure environments, PowerBI reports, etc. 
