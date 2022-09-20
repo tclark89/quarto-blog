@@ -1,6 +1,6 @@
 ---
 title: "Process Control Charts"
-date: "9/18/2022"
+date: "9/20/2022"
 draft: true
 ---
 
