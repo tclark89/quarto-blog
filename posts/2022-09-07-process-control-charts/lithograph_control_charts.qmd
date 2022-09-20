@@ -244,3 +244,63 @@ dataLithoSumm |>
 ```
 
 :::
+
+It looks like we're off to a good start. We've now got the makings
+of a pair of X-bar and S charts, so now we need to add the next layer.
+
+### Control Limits
+
+For standard Shewhart control charts use a 3-sigma range, or +/-
+  3 standard deviations from the mean (the namesake of 6-Sigma).
+  Now technically, we do not know the true mean and standard 
+  deviation of the process, only the measured estimates. We account
+  for this uncertainty with a weighting factor. 
+  There is a full explanation of this in the 
+  [NIST Engineering Statistics Handbook](https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc32.htm).
+  
+To calculate the Control Limits, we'll need the `c4` parameter:
+
+```{r}
+#| label: c4-function
+
+# C4 Function
+c4 <- function(n) {
+  sqrt(2/(n-1)) * (factorial(n/2-1) / factorial((n-1)/2-1))
+}
+```
+
+Then we use this parameter to calculate the Upper and Lower Control 
+  Limits:
+
+::: {.panel-tabset}
+#### Base R
+```{r}
+#| label: base-r-control-limits
+
+dataLithoSumm <- transform(
+  dataLithoSumm,
+  # X-bar UCL & LCL
+  xBar.UCL = process.mean + 3 * process.sd /
+    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
+  xBar.LCL = process.mean - 3 * process.sd /
+    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count))
+)
+
+```
+
+#### dplyr
+```{r}
+#| label: dplyr-control-limits
+
+dataLithoSumm <- dataLithoSumm |> 
+  mutate(
+    xBar.UCL = process.mean + 3 * process.sd /
+      (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
+  xBar.LCL = process.mean - 3 * process.sd /
+    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count))
+  )
+
+```
+
+
+:::
