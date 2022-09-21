@@ -337,18 +337,14 @@ There's a lot of repetitive code up there, some of that could be condensed
 ### Plotting the data
 
 Now that we have the data, lets make these charts! We'll use 
-  `ggplot`.
-```{r}
-#| label: load-ggplot
-library(ggplot)
-```
-
+  `ggplot` again.
   
 ::: {.panel-tabset}
 
 #### X-Bar Chart
 ```{r}
-# label: x-bar-chart
+#| label: x-bar-chart
+#| fig-cap: "X-Bar Chart"
 
 dataLithoSumm |> 
   ggplot(aes(x=CASSETTE, y=LINEWIDT.mean)) +
@@ -363,6 +359,8 @@ dataLithoSumm |>
 #### S Chart
 ```{r}
 #| label: s-chart
+#| fig.cap: "S Chart"
+
 dataLithoSumm |> 
   ggplot(aes(x=CASSETTE, y=LINEWIDT.sd)) +
   geom_point() +
