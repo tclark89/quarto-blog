@@ -279,11 +279,21 @@ Then we use this parameter to calculate the Upper and Lower Control
 
 dataLithoSumm <- transform(
   dataLithoSumm,
-  # X-bar UCL & LCL
+  
+  # X-bar chart UCL & LCL
   xBar.UCL = process.mean + 3 * process.sd /
     (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
+  
   xBar.LCL = process.mean - 3 * process.sd /
-    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count))
+    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
+  
+  # S chart UCL & LCL
+  s.UCL = process.sd + 3 * (process.sd/c4(LINEWIDT.count)) *
+    sqrt(1 - c4(LINEWIDT.count)^2),
+  
+  s.LCL = process.sd - 3 * (process.sd/c4(LINEWIDT.count)) *
+    sqrt(1 - c4(LINEWIDT.count)^2)
+  
 )
 
 ```
@@ -294,10 +304,21 @@ dataLithoSumm <- transform(
 
 dataLithoSumm <- dataLithoSumm |> 
   mutate(
+    
+    # X-bar chart UCL & LCL
     xBar.UCL = process.mean + 3 * process.sd /
       (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
-  xBar.LCL = process.mean - 3 * process.sd /
-    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count))
+    
+    xBar.LCL = process.mean - 3 * process.sd /
+      (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
+    
+    # S chart UCL & LCL
+    s.UCL = process.sd + 3 * (process.sd/c4(LINEWIDT.count)) *
+      sqrt(1 - c4(LINEWIDT.count)^2),
+    
+    s.LCL = process.sd - 3 * (process.sd/c4(LINEWIDT.count)) *
+      sqrt(1 - c4(LINEWIDT.count)^2)
+    
   )
 
 ```
@@ -305,3 +326,50 @@ dataLithoSumm <- dataLithoSumm |>
 
 :::
 
+There's a lot of repetitive code up there, some of that could be condensed
+  if desired. Also, since every group in this dataset has the same number
+  of measurements, the upper and lower control limits for the X-bar
+  and S charts are the same for each group. Of course the mean of 
+  means and mean of standard deviations, `process.mean` and `process.sd`,
+  are also the same for each group. These could be calculated as 
+  standalone variables if desired.
+  
+### Plotting the data
+
+Now that we have the data, lets make these charts! We'll use 
+  `ggplot`.
+```{r}
+#| label: load-ggplot
+library(ggplot)
+```
+
+  
+::: {.panel-tabset}
+
+#### X-Bar Chart
+```{r}
+# label: x-bar-chart
+
+dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.mean)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(aes(yintercept=process.mean)) +
+  geom_line(aes(y=xBar.UCL)) +
+  geom_line(aes(y=xBar.LCL))
+
+```
+
+#### S Chart
+```{r}
+#| label: s-chart
+dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.sd)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(aes(yintercept=process.sd)) +
+  geom_line(aes(y=s.UCL)) +
+  geom_line(aes(y=s.LCL))
+```
+
+:::
