@@ -1,0 +1,50 @@
+---
+title: "My Approach to Tables in Quarto Documents"
+date: 2022-10-01
+categories: [quarto, rmarkdown, knitr, kableExtra, flextable]
+---
+
+Whenever possible I try to use graphs and plots to back up my story
+  about data analysis. That said, sometimes you've just got use some
+  data tables. That could be summary statistics, regression/ANOVA tables,
+  or maybe wedding the visual aids by creating sparklines or mini-plots
+  within a table. 
+  
+In 2022 there are no shortage of R libraries for making beautiful graphs
+  and tables, but my most commonly used tools right now are kableExtra
+  and flextable. gt looks promising but it's still fairly new. I've 
+  tried using huxtable but for whatever reason it's never quite clicked
+  with me. DT is a great library but I try to avoid it for rmarkdown/quarto
+  documents due to how large it blows up HTML files. It's great when I
+  need to include a full dataset in a report though, or in Shiny apps.
+  
+## kableExtra
+
+I really like kableExtra when I am making tables in HTML documents. 
+
+```{r}
+#| label: kableExtra-iris
+#| tbl-cap: "Iris data"
+library(dplyr)
+
+iris |> 
+  group_by(Species) |> 
+  summarise(across(.fns=list(mean=mean, sd=sd))) |> 
+  kableExtra::kbl(
+    col.names = c("Species", rep(c("Mean", "SD"), 4)),
+    digits=1
+  ) |> 
+  kableExtra::add_header_above(
+    c(" ", 
+      "Sepal Length"=2, 
+      "Sepal Width"=2,
+      "Petal Length"=2,
+      "Petal Width"=2), 
+    align = "c"
+  ) |> 
+  kableExtra::kable_styling(
+    bootstrap_options = c("hover", "responsive")
+  )
+
+```
+
