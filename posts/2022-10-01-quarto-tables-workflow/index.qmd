@@ -18,14 +18,35 @@ In 2022 there are no shortage of R libraries for making beautiful graphs
   documents due to how large it blows up HTML files. It's great when I
   need to include a full dataset in a report though, or in Shiny apps.
   
-## kableExtra
+## HTML Tables
 
-I really like kableExtra when I am making tables in HTML documents. 
+I am unaware of any pdf-exclusive r table libraries, but that doesn't mean they
+  don't exist. All of the previously mentioned tables can produce HTML tables,
+  but I really only use:
+  
+1. kableExtra
+2. flextable
+3. DT
+
+mostly in that order.
 
 ```{r}
-#| label: kableExtra-iris
-#| tbl-cap: "Iris data"
+#| label: load-dplyr
+#| message: false
 library(dplyr)
+```
+
+
+### kableExtra
+
+kableExtra is my go-to for HTML tables in my documents. I think the default 
+  settings look pretty good, and it's easy to tweak them to get exactly what I
+  want. 
+
+```{r}
+#| label: iris-kableExtra
+#| tbl-cap: "Iris data - kableExtra"
+
 
 iris |> 
   group_by(Species) |> 
@@ -49,7 +70,58 @@ iris |>
 ```
 
 It's pretty easy to get a nice-looking table, and I really like the "hover"
-  and "responsive" bootstrap options in `kableExtra::kable_styling()`. 
+  and "responsive" bootstrap options in `kableExtra::kable_styling()`. Hover
+  gives a quasi-interactive feel to the table, without having to load all the 
+  javascript required for sorting, filtering, etc. `DT` is better suited for
+  that level of interactivity, but most tables probably don't need that. 
   
+### flextable
 
+Flextable also makes pretty nice HTML tables, but they are more static than 
+  kableExtra's.
+  
+```{r}
+#| label: iris-flextable
+#| tbl-cap: "Iris data - flextable"
+
+iris |> 
+  group_by(Species) |> 
+  summarise(across(.fns=list(mean=mean, sd=sd))) |> 
+  flextable::flextable() |> 
+  flextable::set_header_labels(
+    Sepal.Length_mean = "Mean",
+    Sepal.Length_sd = "SD",
+    Sepal.Width_mean = "Mean",
+    Sepal.Width_sd = "SD",
+    Petal.Length_mean = "Mean",
+    Petal.Length_sd = "SD",
+    Petal.Width_mean = "Mean",
+    Petal.Width_sd = "SD"
+  ) |> 
+  flextable::add_header_row(
+    values=c("", "Sepal Length", "Sepal Width", "Petal Length", "Petal Width"),
+    colwidths = c(1, 2, 2, 2, 2)
+  ) |> 
+  flextable::colformat_double(j=2:9, digits=1) |> 
+  flextable::align(i=1, j=2:9, align="center", part="header")
+
+```
+  
+### Some differences
+
+One of the big differences between the 2 packages is how you make changes. 
+  kableExtra, being based on knitr, leans towards to original R paradigm
+  of a few functions with a lot of internal options, while flextable leans
+  more towards to modern approach of several small functions that have a few options
+  each. 
+  Neither approach is better than the other. 
+  With many small functions there are more commands that have to be remembered, 
+  but they are usually named in a way that easily explains what they do, and they 
+  are typically logicial to read and don't require memorizing (and maintaining!)
+  as much documentation. One drawback is having to nest all of those functions, 
+  or store output to variables over and over, but pipe functions (`|>` or `%>%`)
+  have largely eliminate that problem. Now the only thing to watch for is 
+  long strings of spaghetti code, but that's an issue regardless. 
+  
+  
 
