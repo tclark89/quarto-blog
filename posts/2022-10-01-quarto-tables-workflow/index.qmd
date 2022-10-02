@@ -48,3 +48,8 @@ iris |>
 
 ```
 
+It's pretty easy to get a nice-looking table, and I really like the "hover"
+  and "responsive" bootstrap options in `kableExtra::kable_styling()`. 
+  
+
+
