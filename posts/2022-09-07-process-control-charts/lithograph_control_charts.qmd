@@ -175,7 +175,6 @@ dataLithoSumm <- transform(
 
 With some nesting and use of R's native pipe, this could all be run as one command,
   but it starts to look messy, and code legibility is important in itself. 
-  I'd save that approach for use in an automated but well-documented function.
 
 #### dplyr
 ```{r}
@@ -252,7 +251,7 @@ of a pair of X-bar and S charts, so now we need to add the next layer.
 
 For standard Shewhart control charts use a 3-sigma range, or +/-
   3 standard deviations from the mean (the namesake of 6-Sigma).
-  Now technically, we do not know the true mean and standard 
+  Technically, we do not know the true mean and standard 
   deviation of the process, only the measured estimates. We account
   for this uncertainty with a weighting factor. 
   There is a full explanation of this in the 
@@ -277,24 +276,24 @@ Then we use this parameter to calculate the Upper and Lower Control
 ```{r}
 #| label: base-r-control-limits
 
-dataLithoSumm <- transform(
-  dataLithoSumm,
-  
-  # X-bar chart UCL & LCL
-  xBar.UCL = process.mean + 3 * process.sd /
-    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
-  
-  xBar.LCL = process.mean - 3 * process.sd /
-    (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
-  
-  # S chart UCL & LCL
-  s.UCL = process.sd + 3 * (process.sd/c4(LINEWIDT.count)) *
-    sqrt(1 - c4(LINEWIDT.count)^2),
-  
-  s.LCL = process.sd - 3 * (process.sd/c4(LINEWIDT.count)) *
-    sqrt(1 - c4(LINEWIDT.count)^2)
-  
-)
+dataLithoSumm <- dataLithoSumm |> 
+  transform(
+    
+    # X-bar chart UCL & LCL
+    xBar.UCL = process.mean + 3 * process.sd /
+      (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
+    
+    xBar.LCL = process.mean - 3 * process.sd /
+      (c4(LINEWIDT.count)*sqrt(LINEWIDT.count)),
+    
+    # S chart UCL & LCL
+    s.UCL = process.sd + 3 * (process.sd/c4(LINEWIDT.count)) *
+      sqrt(1 - c4(LINEWIDT.count)^2),
+    
+    s.LCL = process.sd - 3 * (process.sd/c4(LINEWIDT.count)) *
+      sqrt(1 - c4(LINEWIDT.count)^2)
+    
+  )
 
 ```
 
@@ -332,7 +331,9 @@ There's a lot of repetitive code up there, some of that could be condensed
   and S charts are the same for each group. Of course the mean of 
   means and mean of standard deviations, `process.mean` and `process.sd`,
   are also the same for each group. These could be calculated as 
-  standalone variables if desired.
+  standalone variables if desired. Just remember that you can only do that
+  if every row has the same sample size, otherwise you do have to calculate
+  the limits for each row. 
   
 ### Plotting the data
 
