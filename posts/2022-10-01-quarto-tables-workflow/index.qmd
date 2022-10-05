@@ -124,4 +124,24 @@ One of the big differences between the 2 packages is how you make changes.
   long strings of spaghetti code, but that's an issue regardless. 
   
   
+### DT
 
+DT is where I turn to in Shiny, or when I need to include a dataset as a table,
+  but I try to avoid that.
+  
+```{r}
+#| label: iris-DT
+#| tbl-cap: "Iris data - DT"
+iris |> 
+  DT::datatable(
+    caption = "Iris data- DT",
+    filter="top") |> 
+  DT::formatRound(1:4, digits = 1)
+```
+
+It's a pretty neat library, but I get overwhelmed with all of the options. 
+  Especially since many of the options are set by passing HTML/CSS 
+  and javascript code directly into the R code. Luckily there are some helpful
+  guides from [Rstudio](https://rstudio.github.io/DT/) and from the 
+  [authors](https://datatables.net/)
+  
