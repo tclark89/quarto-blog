@@ -1,6 +1,6 @@
 ---
 title: "My Approach to Tables in Quarto Documents"
-date: 2022-10-01
+date: 2022-10-10
 format: 
   html:
     code-fold: show
