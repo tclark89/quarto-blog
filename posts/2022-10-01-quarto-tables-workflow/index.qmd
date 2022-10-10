@@ -1,6 +1,9 @@
 ---
 title: "My Approach to Tables in Quarto Documents"
 date: 2022-10-01
+format: 
+  html:
+    code-fold: show
 categories: [quarto, rmarkdown, knitr, kableExtra, flextable]
 ---
 
@@ -45,7 +48,7 @@ kableExtra is my go-to for HTML tables in my documents. I think the default
 
 ```{r}
 #| label: iris-kableExtra
-#| tbl-cap: "Iris data - kableExtra"
+#| tbl-cap: "Iris Data - kableExtra"
 
 
 iris |> 
@@ -145,3 +148,269 @@ It's a pretty neat library, but I get overwhelmed with all of the options.
   guides from [Rstudio](https://rstudio.github.io/DT/) and from the 
   [authors](https://datatables.net/)
   
+
+## PDF Tables
+
+kableExtra and flextable can also make really nice PDF tables as well. For small
+  tables I lean towards flextable just because I think it looks "better" right 
+  away. For longer tables I lean towards kableExtra because of some of the row
+  highlighting and spacing it does easily. Let's see some examples
+  
+### kableExtra
+```{r}
+#| label: kable-pdf-small
+#| eval: false
+iris |> 
+  group_by(Species) |> 
+  summarise(across(.fns=list(mean=mean, sd=sd))) |> 
+  kableExtra::kbl(
+    booktabs = T,
+    col.names = c("Species", rep(c("Mean", "SD"), 4)),
+    digits=1
+  ) |> 
+  kableExtra::add_header_above(
+    c(" ", 
+      "Sepal Length"=2, 
+      "Sepal Width"=2,
+      "Petal Length"=2,
+      "Petal Width"=2), 
+    align = "c"
+  ) |> 
+  kableExtra::kable_classic_2() 
+```
+
+
+![kableExtra PDF Table](kableExtra-small-pdf.PNG)
+
+I ran the above code in a PDF format quarto document with `mainfont: Cambria`. 
+  I really don't care for the default LaTeX font.
+  Using the various styling functions in kableExtra speeds up the layout process. 
+  I tend not to use them for HTML tables though, just `kable_styling()`.
+  
+For longer tables in a PDF document I make use of the `latex_options` flag in 
+  `kable_styling()`:
+  
+```{r}
+#| label: kable-pdf-long
+#| tbl-cap: "Iris Data (long) - kableExtra"
+#| eval: false
+iris |> 
+  head(20) |> 
+  kableExtra::kbl(
+    booktabs = T,
+    col.names = c("Sepal Length", "Sepal Width", 
+                  "Petal Length", "Petal Width",
+                  "Species"),
+    digits=1
+  ) |> 
+  kableExtra::kable_classic_2() |> 
+  kableExtra::kable_styling(latex_options = "striped")
+```
+
+![kableExtra Long PDF Table](kableExtra-long-pdf.PNG)
+  
+The default of adding a little extra vertical padding every 5 lines, along
+  with the `striped` option helps readability. 
+
+
+### Flextable
+
+For this flextable example, I used the exact same code as the previous HTML
+  example, but ran it in a PDF format quarto document. The library really lives
+  up to it's name!
+
+![flextable PDF Table](flextable-small-pdf.PNG)
+
+Longer flextables are where I run into issues though:
+```{r}
+#| label: flextable-pdf-long
+#| tbl-cap: "Iris Data (long) - flextable"
+#| eval: false
+
+evens <- function(x) subset(x, x %% 2 == 0)
+fives <- function(x) subset(x, x %% 5 == 0)
+
+irisSubset <- iris |> 
+  head(20) 
+
+irisSubset |> 
+  flextable::flextable() |> 
+  flextable::set_header_labels(
+    Sepal.Length="Sepal Length", 
+    Sepal.Width="Sepal Width", 
+    Petal.Length="Petal Length", 
+    Petal.Width="Petal Width") |> 
+  flextable::align(j=5, align="center", part="all") |> 
+  flextable::bg(i=evens(c(1:length(irisSubset[,1]))), bg="#eeeeee") |> 
+  flextable::padding(i=fives(c(1:length(irisSubset[,1]))), padding.bottom = 20) |> 
+  flextable::autofit()
+```
+
+![flextable Long PDF Table](flextable-long-pdf.PNG)
+
+The color and padding have to be manually defined which adds to code length and
+  complexity. That's not always a bad thing, but unfortunately not all of this code
+  works in both HTML and PDF. `flextable::padding()` is the main issue. 
+  Theoretically you could add blank rows or something but that just further clutters
+  up the code when you could just use kableExtra. In general, I find that simpler
+  is better when it come to LaTeX and flextable. 
+  
+## Microsoft output
+
+Most of the table libraries are focused on HTML, so outputting to Word usually 
+  involves using `webshot` to save a png and insert it into the document, or 
+  tossing out most of the formatting with a markdown table. 
+  
+### kableExtra
+
+If you use the `prefer-html: true` option in the YAML header, kableExtra can 
+ output simple markdown tables into a document:
+  
+![kableExtra Small Docx Table](kableExtra-small-docx.PNG)
+
+![kableExtra Long Docx Table](kableExtra-long-docx.PNG)
+
+But notice that they lose most of the formatting options that were applied. 
+  Also notice that while there is a caption, Word didn't recognize it as the 
+  table caption so there is no numbering or document linking, and that's even
+  with using Quarto's `tbl-cap` chunk option!
+
+
+### flextable
+
+Flextable was designed to generate real MS Office tables though:
+
+![flextable Small Docx Table](flextable-small-docx.PNG)
+
+![flextable Long Docx Table](flextable-long-docx.PNG)
+
+These tables look pretty good (if nothing else they're drawn exactly as I told 
+  flextable). The `padding` option also works in Word documents. 
+  As before, the flextable
+ output all uses the same code for HTML, PDF, and Docx report formats.
+ 
+## Closing thoughts
+
+In general, when I am making tables in an HTML document I'll go with kableExtra
+  because it very quickly gets me on the right track. However, there are many, 
+  many other options. When I am working with PDF documents I'll use flextable for
+  the simple stuff and kableExtra when I need better control over the LaTeX code
+  being generated. When I am making Word documents, there's really no better choice
+  than flextable. 
+  
+### Quarto/RMarkdown Tip
+
+I often create HTML and PDF/Docx reports for the same data. HTML is great for 
+  opening on a screen and interacting with the report, while PDF/Word can be
+  more easily emailed, printed, etc. To facilitate my above mentioned table 
+  choices, I use the following code early in the document:
+  
+```{r}
+#| label: html-check
+
+is_html <- knitr::is_html_output()
+```
+
+When the report is being compiled, the variable `is_html` will be `TRUE` for 
+  HTML documents and `FALSE` for all others. Then I can define functions like:
+
+::: {.panel-tabset}
+
+#### Small Table
+```{r}
+#| label: iris-summary-kableExtra-flextable
+#| tbl-cap: "Iris Data - kableExtra or flextable"
+#| eval: false
+
+irisSumm <- iris |> 
+  group_by(Species) |> 
+  summarise(across(.fns=list(mean=mean, sd=sd))) 
+
+if(is_html){
+  
+  irisSumm |> 
+    kableExtra::kbl(
+      col.names = c("Species", rep(c("Mean", "SD"), 4)),
+      digits=1
+    ) |> 
+    kableExtra::add_header_above(
+      c(" ", 
+        "Sepal Length"=2, 
+        "Sepal Width"=2,
+        "Petal Length"=2,
+        "Petal Width"=2), 
+      align = "c"
+    ) |> 
+    kableExtra::kable_styling(
+      bootstrap_options = c("hover", "responsive")
+    )
+  
+} else {
+  
+  irisSumm |> 
+    flextable::flextable() |> 
+    flextable::set_header_labels(
+      Sepal.Length_mean = "Mean",
+      Sepal.Length_sd = "SD",
+      Sepal.Width_mean = "Mean",
+      Sepal.Width_sd = "SD",
+      Petal.Length_mean = "Mean",
+      Petal.Length_sd = "SD",
+      Petal.Width_mean = "Mean",
+      Petal.Width_sd = "SD"
+    ) |> 
+    flextable::add_header_row(
+      values=c("", "Sepal Length", "Sepal Width", "Petal Length", "Petal Width"),
+      colwidths = c(1, 2, 2, 2, 2)
+    ) |> 
+    flextable::colformat_double(j=2:9, digits=1) |> 
+    flextable::align(i=1, j=2:9, align="center", part="header")
+  
+}
+```  
+  
+#### Long Table
+```{r}
+#| label: long-table-kable-flex
+#| tbl-cap: "Iris Data (long) - kableExtra or Flextable"
+#| eval: false
+
+evens <- function(x) subset(x, x %% 2 == 0)
+fives <- function(x) subset(x, x %% 5 == 0)
+
+irisSubset <- iris |> 
+  head(20)  
+
+if(is_html){
+  
+  irisSubset |> 
+    kableExtra::kbl(
+      booktabs = T,
+      col.names = c("Sepal Length", "Sepal Width", 
+                    "Petal Length", "Petal Width",
+                    "Species"),
+      digits=1
+    ) |> 
+    kableExtra::kable_styling(bootstrap_options = c("hover", "responsive", "condensed"))
+  
+} else{
+
+irisSubset |> 
+  flextable::flextable() |> 
+  flextable::set_header_labels(
+    Sepal.Length="Sepal Length", 
+    Sepal.Width="Sepal Width", 
+    Petal.Length="Petal Length", 
+    Petal.Width="Petal Width") |> 
+  flextable::align(j=5, align="center", part="all") |> 
+  flextable::bg(i=evens(c(1:length(irisSubset[,1]))), bg="#eeeeee") |> 
+  flextable::padding(i=fives(c(1:length(irisSubset[,1]))), padding.bottom = 20) |> 
+  flextable::autofit()
+
+}
+  
+```
+
+
+:::
+
