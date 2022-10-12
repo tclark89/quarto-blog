@@ -58,7 +58,7 @@ Luckily, smarter people than myself have already thought about this
 At the time of this post I chose the `rocker/tidyverse` image to build my
   RStudio environment, but this could change in the future (see my 
   <a href="https://github.com/tclark89/tidyverse-extra">repo</a>
-  for the latest). Having Rstudio server and the tidyverse packages
+  for the latest).[^docker-note] Having Rstudio server and the tidyverse packages
   gets me 90% of the way to where I want to be, but there are other 
   packages that I use quite a bit. To get those packages I would either
   need to 
@@ -76,6 +76,12 @@ I am a big fan of keeping things simple, reproducible,
   (sometimes rules are made to be broken, but I am not familiar enough
   with docker to be getting my hands _that_ dirty just yet), 
   so I went with Option 2. 
+
+
+[^docker-note]: Update (10/12/2022): I have switched my main docker image
+  to `rocker/verse` (for LaTeX) and set up a new github repository 
+  <a href="https://github.com/tclark89/verse-extra">here</a>
+
 
 ### Configuration
 
