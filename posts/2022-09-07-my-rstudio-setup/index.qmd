@@ -37,7 +37,7 @@ However, R and RStudio are not in that category. On Debian, both
   
 It seemed to me that R would need it's own environment.
   How best to do that? I turned to
-  <a href="https://www.docker.com/">Docker</a> for this particular
+  [Docker](https://www.docker.com/) for this particular
   case.
 
 [![Docker](vertical-logo-monochromatic.png){width=30%}](https://www.docker.com/ "Docker")
@@ -48,7 +48,7 @@ It seemed to me that R would need it's own environment.
 
 Luckily, smarter people than myself have already thought about this
   and started the 
-  <a href="https://rocker-project.org/">Rocker Project</a>. They
+  [Rocker Project](https://rocker-project.org/). They
   have many different containers all built in layers on each other
   so it's easy to find a good starting point for running R/shiny 
   apps, or building a general dev environment like I was looking for. 
@@ -57,7 +57,7 @@ Luckily, smarter people than myself have already thought about this
 
 At the time of this post I chose the `rocker/tidyverse` image to build my
   RStudio environment, but this could change in the future (see my 
-  <a href="https://github.com/tclark89/tidyverse-extra">repo</a>
+  [repo](https://github.com/tclark89/tidyverse-extra)
   for the latest).[^docker-note] Having Rstudio server and the tidyverse packages
   gets me 90% of the way to where I want to be, but there are other 
   packages that I use quite a bit. To get those packages I would either
@@ -80,7 +80,7 @@ I am a big fan of keeping things simple, reproducible,
 
 [^docker-note]: Update (10/12/2022): I have switched my main docker image
   to `rocker/verse` (for LaTeX) and set up a new github repository 
-  <a href="https://github.com/tclark89/verse-extra">here</a>
+  [here](https://github.com/tclark89/verse-extra)
 
 
 ### Configuration
@@ -118,9 +118,9 @@ install.packages(
 
 After the script is run, I execute 2 more commands to clean up the image
   (as advised by the 
-  <a href="https://rocker-project.org/use/extending.html#install-binary-packages">Rocker team</a>). 
+  [Rocker team](https://rocker-project.org/use/extending.html#install-binary-packages)). 
   This image is available on 
-  <a href="https://hub.docker.com/repository/docker/tclark89/tidyverse-extra">Docker Hub</a>
+  [Docker Hub](https://hub.docker.com/repository/docker/tclark89/tidyverse-extra)
   as `tclark89/tidyverse-extra`
   
 One day I may dig more deeply into setting up my own _very_ custom image by 
@@ -154,18 +154,19 @@ The `docker-compose.yml` file starts the `rstudio` service:
 - Uses my custom docker image as the base
 - Maps the container ports
 - Sets the rstudio user's password and gives it sudo via 
-  <a href="https://rocker-project.org/images/versioned/rstudio.html#environment-variables">
-  environment variables</a>
+  [environment variables](https://rocker-project.org/images/versioned/rstudio.html#environment-variables)
+
 - Maps some directories to be shared between host and container. This lets 
   settings and files persist in my `/home` directory between sessions. 
   
 The rocker team provides an example 
-  <a href="https://rocker-project.org/images/versioned/rstudio.html#editing-work-on-rstudio-server">
-  compose file</a> as well. 
+  [compose file](https://rocker-project.org/images/versioned/rstudio.html#editing-work-on-rstudio-server)
+  as well. 
   
   
 ### Running the Container
 
+<s>
 All it takes to run the docker container now is to `cd` to the directory with
   the docker-compose.yml file and issue the command: `docker compose up`. 
   However, I would like for this to happen automatically so I can just login and
@@ -213,12 +214,22 @@ Because   `docker compose` looks for a `docker-compose.yml` file in the working
 As a final note, this will only work if your user is part of the docker group,
   otherwise docker needs root privileges. This file could just as easily be made
   to work as root, but the docker-compose.yml file would need to have absolute
-  paths instead of user-relative ones. 
+  paths instead of user-relative ones.</s>
+  
+#### Update: 11/7/2022
+Docker doesn't recommend making images persistent with systemd files. There is a 
+  [built-in method](https://docs.docker.com/config/containers/start-containers-automatically/)
+  for starting containers at boot: 
+  
+  1. Start the container with `docker run`, `docker compose up`, etc.
+  2. Run the command: `docker update --restart unless-stopped $container_name`
+  
+  Much simpler!
   
 ## Using RStudio
 
 Now that all of the pieces are in place, all I have to do to access RStudio at
-  home is to open a broswer, access my file server at port 8787, 
+  home is to open a browser, access my file server at port 8787, 
   and log in to RStudio Server.
   Then I can just `git pull` and get back to work on this website or whatever 
   project I am focused on.
@@ -230,5 +241,5 @@ For now this all works wonderfully. I don't have to muck around with dependencie
   work on a project I can spin up the docker image directly on my Chromebook
   (via the built-in Linux VM) and fire away. 
   In fact, you can even run this image in a browser via
-  <a href="https://labs.play-with-docker.com/">Play with Docker</a>,
+  [Play with Docker](https://labs.play-with-docker.com/),
   though it eats up quite a bit of RAM to do so.  
