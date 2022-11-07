@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Tyler Clark</title>
+<link>https://tclark89.github.io/quarto-blog/blog.html</link>
+<atom:link href="https://tclark89.github.io/quarto-blog/blog.xml" rel="self" type="application/rss+xml"/>
+<description>Tyler&#39;s personal blog</description>
+<generator>quarto-1.2.258</generator>
+<lastBuildDate>Mon, 10 Oct 2022 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/posts/2022-10-10-quarto-tables-workflow/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-10-10-quarto-tables-workflow/index.html</link>
+  <description>{B4F502887207:/posts/2022-10-10-quarto-tables-workflow/index.html}</description>
+  <category>quarto</category>
+  <category>rmarkdown</category>
+  <category>knitr</category>
+  <category>kableExtra</category>
+  <category>flextable</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-10-10-quarto-tables-workflow/index.html</guid>
+  <pubDate>Mon, 10 Oct 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-10-10-quarto-tables-workflow/kableExtra-small-pdf.PNG" medium="image"/>
+</item>
+<item>
+  <title>{B4F502887207:/posts/2022-09-20-onedrive-and-r/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-09-20-onedrive-and-r/index.html</link>
+  <description>{B4F502887207:/posts/2022-09-20-onedrive-and-r/index.html}</description>
+  <category>notes</category>
+  <category>R</category>
+  <category>RStudio</category>
+  <category>Microsoft</category>
+  <category>OneDrive</category>
+  <category>SharePoint</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-09-20-onedrive-and-r/index.html</guid>
+  <pubDate>Tue, 20 Sep 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-09-20-onedrive-and-r/onedrive_logo.png" medium="image" type="image/png" height="95" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/posts/2022-09-13-case_when/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-09-13-case_when/index.html</link>
+  <description>{B4F502887207:/posts/2022-09-13-case_when/index.html}</description>
+  <category>tidyverse</category>
+  <category>dplyr</category>
+  <category>notes</category>
+  <category>code</category>
+  <category>R</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-09-13-case_when/index.html</guid>
+  <pubDate>Tue, 13 Sep 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-09-13-case_when/dplyr-logo.png" medium="image" type="image/png" height="166" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/posts/2022-09-07-my-rstudio-setup/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-09-07-my-rstudio-setup/index.html</link>
+  <description>{B4F502887207:/posts/2022-09-07-my-rstudio-setup/index.html}</description>
+  <category>Docker</category>
+  <category>Rocker Project</category>
+  <category>R</category>
+  <category>RStudio</category>
+  <category>Linux</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-09-07-my-rstudio-setup/index.html</guid>
+  <pubDate>Wed, 07 Sep 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-09-07-my-rstudio-setup/rocker.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/posts/2022-09-05-powerbi-loop-files/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-09-05-powerbi-loop-files/index.html</link>
+  <description>{B4F502887207:/posts/2022-09-05-powerbi-loop-files/index.html}</description>
+  <category>Microsoft</category>
+  <category>PowerBI</category>
+  <category>M Code</category>
+  <category>Excel</category>
+  <category>code</category>
+  <category>notes</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-09-05-powerbi-loop-files/index.html</guid>
+  <pubDate>Mon, 05 Sep 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-09-05-powerbi-loop-files/social-default-image.png" medium="image" type="image/png" height="76" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/posts/2022-09-04-flatpak/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-09-04-flatpak/index.html</link>
+  <description>{B4F502887207:/posts/2022-09-04-flatpak/index.html}</description>
+  <category>flatpak</category>
+  <category>linux</category>
+  <category>notes</category>
+  <category>debian</category>
+  <category>archlinux</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-09-04-flatpak/index.html</guid>
+  <pubDate>Sun, 04 Sep 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-09-04-flatpak/Flatpak_Logo.svg.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/posts/2022-09-03-my-favorite-packages/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-09-03-my-favorite-packages/index.html</link>
+  <description>{B4F502887207:/posts/2022-09-03-my-favorite-packages/index.html}</description>
+  <category>R</category>
+  <category>Rstudio</category>
+  <category>tidyverse</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-09-03-my-favorite-packages/index.html</guid>
+  <pubDate>Sat, 03 Sep 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-09-03-my-favorite-packages/magrittr.png" medium="image" type="image/png" height="167" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/posts/2022-09-03-welcome/index.html}</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2022-09-03-welcome/index.html</link>
+  <description>{B4F502887207:/posts/2022-09-03-welcome/index.html}</description>
+  <category>news</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2022-09-03-welcome/index.html</guid>
+  <pubDate>Sat, 03 Sep 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2022-09-03-welcome/portrait.jpg" medium="image" type="image/jpeg"/>
+</item>
+</channel>
+</rss>

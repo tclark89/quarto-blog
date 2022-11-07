@@ -8,8 +8,13 @@
 <title>Tyler Clark</title>
 <link>https://tclark89.github.io/quarto-blog/blog.html</link>
 <atom:link href="https://tclark89.github.io/quarto-blog/blog.xml" rel="self" type="application/rss+xml"/>
+<<<<<<< HEAD
 <description>Tyler&#39;s personal blog</description>
 <generator>quarto-1.2.258</generator>
+=======
+<description>Tyler's personal blog</description>
+<generator>quarto-1.1.242</generator>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
 <lastBuildDate>Mon, 10 Oct 2022 05:00:00 GMT</lastBuildDate>
 <item>
   <title>My Approach to Tables in Quarto Documents</title>

@@ -2,7 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
+<<<<<<< HEAD
 <meta name="generator" content="quarto-1.2.258">
+=======
+<meta name="generator" content="quarto-1.1.242">
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -145,27 +149,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
+<<<<<<< HEAD
     <a class="nav-link" href="../../blog.html">
  <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../archive.html">
  <span class="menu-text">Archive</span></a>
+=======
+    <a class="nav-link" href="../../blog.html">Blog</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../archive.html">Archive</a>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/tclark89/"><i class="bi bi-github" role="img">
 </i> 
+<<<<<<< HEAD
  <span class="menu-text"></span></a>
+=======
+ </a>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://www.linkedin.com/in/tyler-clark-5b5b511b5"><i class="bi bi-linkedin" role="img">
 </i> 
+<<<<<<< HEAD
  <span class="menu-text"></span></a>
+=======
+ </a>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="../../blog.xml"><i class="bi bi-rss" role="img">
 </i> 
+<<<<<<< HEAD
  <span class="menu-text"></span></a>
+=======
+ </a>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
   </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
@@ -204,7 +227,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         <p class="date">September 7, 2022</p>
       </div>
     </div>
+<<<<<<< HEAD
     
+=======
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
       
     </div>
     
@@ -317,6 +343,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ~/code/R:/home/rstudio/workspace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>docker-compose.yml</code> file starts the <code>rstudio</code> service:</p>
 <ul>
+<<<<<<< HEAD
 <li><p>Uses my custom docker image as the base</p></li>
 <li><p>Maps the container ports</p></li>
 <li><p>Sets the rstudio user’s password and gives it sudo via <a href="https://rocker-project.org/images/versioned/rstudio.html#environment-variables">environment variables</a></p></li>
@@ -327,6 +354,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="running-the-container" class="level3">
 <h3 class="anchored" data-anchor-id="running-the-container">Running the Container</h3>
 <p><s> All it takes to run the docker container now is to <code>cd</code> to the directory with the docker-compose.yml file and issue the command: <code>docker compose up</code>. However, I would like for this to happen automatically so I can just login and go. There may be a different way to do this, but I went with a systemd service file.</s></p><s>
+=======
+<li>Uses my custom docker image as the base</li>
+<li>Maps the container ports</li>
+<li>Sets the rstudio user’s password and gives it sudo via <a href="https://rocker-project.org/images/versioned/rstudio.html#environment-variables"> environment variables</a></li>
+<li>Maps some directories to be shared between host and container. This lets settings and files persist in my <code>/home</code> directory between sessions.</li>
+</ul>
+<p>The rocker team provides an example <a href="https://rocker-project.org/images/versioned/rstudio.html#editing-work-on-rstudio-server"> compose file</a> as well.</p>
+</section>
+<section id="running-the-container" class="level3">
+<h3 class="anchored" data-anchor-id="running-the-container">Running the Container</h3>
+<p>All it takes to run the docker container now is to <code>cd</code> to the directory with the docker-compose.yml file and issue the command: <code>docker compose up</code>. However, I would like for this to happen automatically so I can just login and go. There may be a different way to do this, but I went with a systemd service file.</p>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
 <p>After some digging through the Arch Wiki and various SO posts I settled on the following:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[Unit]</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Description</span><span class="ot">=</span><span class="st">%i service with docker compose</span></span>
@@ -351,6 +390,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><code>systemctl enable --now --user docker-compose@tidyverse-extra.service</code></p>
 </blockquote>
 <p>Because <code>docker compose</code> looks for a <code>docker-compose.yml</code> file in the working directory, I needed to specify one in this file and make sure that directory existed in my <code>/home</code>. The <code>%u</code> makes this file user-agnostic and the <code>%i</code> and <code>@</code> make it usable for any other docker service I may decide to use later. I just need to make sure that I create a directory in <code>~/docker/compose/</code> and put the <code>docker-compose.yml</code> file there.</p>
+<<<<<<< HEAD
 </s><p><s>As a final note, this will only work if your user is part of the docker group, otherwise docker needs root privileges. This file could just as easily be made to work as root, but the docker-compose.yml file would need to have absolute paths instead of user-relative ones.</s></p>
 <section id="update-1172022" class="level4">
 <h4 class="anchored" data-anchor-id="update-1172022">Update: 11/7/2022</h4>
@@ -361,11 +401,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <p>Much simpler!</p>
 </section>
+=======
+<p>As a final note, this will only work if your user is part of the docker group, otherwise docker needs root privileges. This file could just as easily be made to work as root, but the docker-compose.yml file would need to have absolute paths instead of user-relative ones.</p>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
 </section>
 </section>
 <section id="using-rstudio" class="level2">
 <h2 class="anchored" data-anchor-id="using-rstudio">Using RStudio</h2>
+<<<<<<< HEAD
 <p>Now that all of the pieces are in place, all I have to do to access RStudio at home is to open a browser, access my file server at port 8787, and log in to RStudio Server. Then I can just <code>git pull</code> and get back to work on this website or whatever project I am focused on.</p>
+=======
+<p>Now that all of the pieces are in place, all I have to do to access RStudio at home is to open a broswer, access my file server at port 8787, and log in to RStudio Server. Then I can just <code>git pull</code> and get back to work on this website or whatever project I am focused on.</p>
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
 <p>For now this all works wonderfully. I don’t have to muck around with dependencies on my server, and saving the docker files to GitHub and the image to Docker Hub means that it should be reproducible in case I can’t access the server. For instance, if I am away from home but want to work on a project I can spin up the docker image directly on my Chromebook (via the built-in Linux VM) and fire away. In fact, you can even run this image in a browser via <a href="https://labs.play-with-docker.com/">Play with Docker</a>, though it eats up quite a bit of RAM to do so.</p>
 
 
@@ -419,6 +466,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+<<<<<<< HEAD
     let tooltip;
     if (window.bootstrap) {
       button.setAttribute("data-bs-toggle", "tooltip");
@@ -437,6 +485,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         button.removeAttribute("data-bs-toggle");
         button.removeAttribute("data-bs-placement");
       }
+=======
+    setTimeout(function() {
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -472,6 +523,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+<<<<<<< HEAD
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -508,6 +560,26 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return popup.innerHTML;
       });
     }
+=======
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+>>>>>>> e53322f4bfff48bad813640f00ee0a5007df8282
   }
 });
 </script>
