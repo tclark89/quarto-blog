@@ -1,1 +1,0 @@
-Sitemap: https://tclark89.github.io/quarto-blog/sitemap.xml
