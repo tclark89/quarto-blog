@@ -1,5 +1,7 @@
 
-## Lithograph Data
+## X-bar and S Charts
+
+### Lithograph Data
 
 Let's look at an example of creating a set of X-bar and S charts.
   We'll use the 
@@ -66,7 +68,7 @@ library(ggplot2)
 
   
 ```{r}
-#| label: hitogram-litho
+#| label: fig-litho-linewidth
 #| fig-cap: "Distribution of Linewidth"
 dataLitho |> 
   ggplot(aes(x=LINEWIDT)) +
@@ -78,7 +80,7 @@ The data looks normal, so that's good.
 Let's use box-and-whisker plots to check out the groups.
 
 ```{r}
-#| label: boxplot-litho-cassette
+#| label: fig-lithograph-linewidth-cassette
 #| fig-cap: "Linewidth by Cassette"
 dataLitho |> 
   ggplot(aes(x=CASSETTE, y=LINEWIDT, group=CASSETTE)) +
@@ -218,7 +220,7 @@ Now that we have some summary data, let's take a look at it:
 #### Mean
 
 ```{r}
-#| label: litho-plot-mean
+#| label: fig-litho-mean
 #| fig-cap: "Mean Linewidth by Cassette and Overall"
 
 dataLithoSumm |> 
@@ -232,7 +234,7 @@ dataLithoSumm |>
 #### Standard Deviation
 
 ```{r}
-#| label: litho-plot-sd
+#| label: fig-litho-sd
 #| fig-cap: "Std. Dev. of Linewidth by Cassette"
 
 dataLithoSumm |> 
@@ -344,7 +346,7 @@ Now that we have the data, lets make these charts! We'll use
 
 #### X-Bar Chart
 ```{r}
-#| label: x-bar-chart
+#| label: fig-litho-x-bar-chart
 #| fig-cap: "X-Bar Chart"
 
 dataLithoSumm |> 
@@ -359,8 +361,8 @@ dataLithoSumm |>
 
 #### S Chart
 ```{r}
-#| label: s-chart
-#| fig.cap: "S Chart"
+#| label: fig-litho-s-chart
+#| fig-cap: "S Chart"
 
 dataLithoSumm |> 
   ggplot(aes(x=CASSETTE, y=LINEWIDT.sd)) +
@@ -372,3 +374,37 @@ dataLithoSumm |>
 ```
 
 :::
+
+Technically, this is all you need for a set of X-bar and S charts. You'd probably
+  want to put some labels on there, and the plots are often shown together with 
+  the X-Bar chart above the S chart, aligned on the x-axis. 
+  
+```{r}
+#| label: fig-x-bar-and-s-lithograph
+#| fig-cap: "Lithograph X-Bar and S Charts"
+
+g1 <- dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.mean)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(aes(yintercept=process.mean)) +
+  geom_line(aes(y=xBar.UCL)) +
+  geom_line(aes(y=xBar.LCL)) +
+  labs(y="Avg. Linewidth", x="Cassette") +
+  theme_bw()
+
+
+g2 <- dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.sd)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(aes(yintercept=process.sd)) +
+  geom_line(aes(y=s.UCL)) +
+  geom_line(aes(y=s.LCL)) +
+  labs(y="StdDev. Linewidth", x="Cassette") +
+  theme_bw()
+
+
+gridExtra::grid.arrange(g1, g2)
+```
+
