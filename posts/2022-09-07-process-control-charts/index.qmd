@@ -4,6 +4,8 @@ date: "2022-10-03"
 categories: [Process Control, R, ggplot2, engineering, manufacturing, tidyverse, code]
 ---
 
+## Process Control Charts
+
 If you do any work in engineering, manufacturing, processing, etc. you're likely
   to encounter Statistical Process Control. It is fundamental for understanding
   processes and makes up a good portion of the Six Sigma program. A very handy
