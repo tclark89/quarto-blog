@@ -66,17 +66,6 @@ The first step of any data analysis, even when you have a clear goal
 library(ggplot2)
 ```
 
-  
-```{r}
-#| label: fig-litho-linewidth
-#| fig-cap: "Distribution of Linewidth"
-dataLitho |> 
-  ggplot(aes(x=LINEWIDT)) +
-  geom_histogram(bins=10)
-
-```
-
-The data looks normal, so that's good. 
 Let's use box-and-whisker plots to check out the groups.
 
 ```{r}
@@ -95,43 +84,7 @@ summary(modelCassette)
 It looks like there is some change in line width as the process goes on. 
   This is exactly the sort of thing that SPC charts look for. 
 
-```{r}
-#| label: boxplot-litho-wafer
-dataLitho |> 
-  ggplot(aes(x=WAFER, y=LINEWIDT, group=WAFER)) +
-  geom_boxplot()
-```
 
-```{r}
-#| label: model-litho-wafer
-modelWafer <- lm(LINEWIDT~WAFER, data=dataLitho)
-summary(modelWafer)
-```
-
-Wafer number in the cassette doesn't look like it has any effect on the line
-  width. That's good to know. 
-
-```{r}
-#| label: boxplot-litho-site
-dataLitho |> 
-  ggplot(aes(x=SITE, y=LINEWIDT, group=SITE)) +
-  geom_boxplot()
-```
-
-  
-```{r}
-#| label: model-litho-site
-modelSite <- lm(LINEWIDT~SITE, data=dataLitho)
-summary(modelSite)
-
-```
-  
-
-There appears to be a slight trend in line width based on the location of the 
-  measurement on the wafer. For now we won't worry about this since it looks fairly
-  consistent within site. In real-life you'd probably also want to look at all
-  the various multi-factor groupings, but for brevity we'll just focus on the 
-  measured line width by cassette number.
   
 ### Initial SPC Calculations
 
@@ -205,13 +158,16 @@ dataLithoSumm <- dataLitho |>
   ) 
 ```
 
+One of the great things about the tidyverse libraries is the ability to do many
+  separate steps in a string of easy to understand commands. 
+
 :::
 
 The only difference in the output is that base R produces a data.frame and dplyr
   produces a 
   [tibble](https://tibble.tidyverse.org/), 
   but a 
-  [tibble is really just a data.frame with some extra polish.](https://r4ds.had.co.nz/tibbles.html)
+  [tibble is really just a data.frame with some extensions](https://r4ds.had.co.nz/tibbles.html)
   
 Now that we have some summary data, let's take a look at it:
 
@@ -339,45 +295,7 @@ There's a lot of repetitive code up there, some of that could be condensed
   
 ### Plotting the data
 
-Now that we have the data, lets make these charts! We'll use 
-  `ggplot` again.
-  
-::: {.panel-tabset}
-
-#### X-Bar Chart
-```{r}
-#| label: fig-litho-x-bar-chart
-#| fig-cap: "X-Bar Chart"
-
-dataLithoSumm |> 
-  ggplot(aes(x=CASSETTE, y=LINEWIDT.mean)) +
-  geom_point() +
-  geom_line() +
-  geom_hline(aes(yintercept=process.mean)) +
-  geom_line(aes(y=xBar.UCL)) +
-  geom_line(aes(y=xBar.LCL))
-
-```
-
-#### S Chart
-```{r}
-#| label: fig-litho-s-chart
-#| fig-cap: "S Chart"
-
-dataLithoSumm |> 
-  ggplot(aes(x=CASSETTE, y=LINEWIDT.sd)) +
-  geom_point() +
-  geom_line() +
-  geom_hline(aes(yintercept=process.sd)) +
-  geom_line(aes(y=s.UCL)) +
-  geom_line(aes(y=s.LCL))
-```
-
-:::
-
-Technically, this is all you need for a set of X-bar and S charts. You'd probably
-  want to put some labels on there, and the plots are often shown together with 
-  the X-Bar chart above the S chart, aligned on the x-axis. 
+Now that we have the data, lets make these charts.
   
 ```{r}
 #| label: fig-x-bar-and-s-lithograph
@@ -408,3 +326,4 @@ g2 <- dataLithoSumm |>
 gridExtra::grid.arrange(g1, g2)
 ```
 
+Generally the X-Bar and S charts are shown together with the x-axes aligned. 
