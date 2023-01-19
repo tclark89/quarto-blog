@@ -622,3 +622,29 @@ g2 <- dataLithoRange |>
 
 gridExtra::grid.arrange(g1, g2)
 ```
+
+## I and MR Charts
+
+When the sample size is n=1, use the MR, or Moving Range, chart. The Moving Range
+  is the absolute difference between consecutive measurements. 
+
+```{r}
+#| label: data-moving-range
+dataLithoMR <- dataLitho |>
+  # Filter down to one measurement per cassette
+  filter(WAFER == 1, SITE == 1) |> 
+  mutate(
+    # Find the Moving Range
+    LINEWIDT.mr = abs(LINEWIDT - lag(LINEWIDT, 1)),
+    
+    process.mean = mean(LINEWIDT),
+    process.mr = mean(LINEWIDT.mr, na.rm=T),
+    
+    # 1.128 is the value for d2=1
+    xBar.UCL = process.mean + 3 * process.mr / 1.128,
+    xBar.UCL = process.mean - 3 * process.mr / 1.128
+    
+    mr.UCL = 3.267
+    mr.LCL = 0
+  ) 
+```
