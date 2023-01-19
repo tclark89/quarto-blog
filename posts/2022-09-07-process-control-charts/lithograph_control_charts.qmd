@@ -215,7 +215,7 @@ For standard Shewhart control charts use a 3-sigma range, or +/-
   There is a full explanation of this in the 
   [NIST Engineering Statistics Handbook](https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc32.htm).
   
-To calculate the Control Limits, we'll need the `c4` parameter:
+To calculate the Control Limits, we'll need the c$_{4}$ parameter:
 
 ```{r}
 #| label: c4-function
@@ -327,3 +327,298 @@ gridExtra::grid.arrange(g1, g2)
 ```
 
 Generally the X-Bar and S charts are shown together with the x-axes aligned. 
+
+If desired, the [Western Electric Company Rules](https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc32.htm)
+  can be applied to this chart. 
+  I like to mainly focus on shifting averages and extreme outliers:
+  
+
+#### dplyr
+```{r}
+#| label: tidyverse-weco
+dataLithoSumm <- dataLithoSumm |> 
+  mutate(
+    # Is the point beyond +/- 3 sigma?
+    xBar.beyond = ifelse((LINEWIDT.mean > xBar.UCL | LINEWIDT.mean < xBar.LCL), 1, 0),
+    # Assign each point -1, 0, or 1 if it is below, at, or above the mean
+    xBar.position = ifelse(LINEWIDT.mean > process.mean, 1, 
+                       ifelse(LINEWIDT.mean < process.mean, -1, 0)),
+    # Then cumulatively sum these scores
+    xBar.csum = cumsum((xBar.position)),
+    # Use dplyr::lag to see if there are 7 or more consecutive points above or
+    # below the overall mean
+    xBar.lag = xBar.csum - lag(xBar.csum, 7, default = 0),
+    xBar.violatingRun = if_else(abs(xBar.lag)>=7, 1, 0),
+    xBar.color=if_else(xBar.beyond == 1, "Beyond Limits", 
+                  if_else(xBar.violatingRun==1, "Violating Run", "Normal")),
+    
+    
+    
+    # Repeat for the standard deviation
+    s.beyond = ifelse((LINEWIDT.sd > s.UCL | LINEWIDT.sd < s.LCL), 1, 0),
+    s.position = ifelse(LINEWIDT.sd > process.sd, 1, 
+                       ifelse(LINEWIDT.sd < process.sd, -1, 0)),
+    s.csum = cumsum((s.position)),
+
+    s.lag = s.csum - lag(s.csum, 7, default = 0),
+    s.violatingRun = if_else(abs(s.lag)>=7, 1, 0),
+    s.color=if_else(s.beyond == 1, "Beyond Limits", 
+                  if_else(s.violatingRun==1, "Violating Run", "Normal"))
+  )
+```
+I don't know of a good way to emulate `dplyr::lag()` without some ugly code to 
+  shift row indexes around and then `merge(df1, df2, all.x=TRUE)`. 
+
+  
+```{r}
+#| label: fig-x-bar-and-s-lithograph-WECO
+#| fig-cap: "Lithograph X-Bar and S Charts With WECO Rules"
+
+colorsKey <- c("Beyond Limits"="red", "Violating Run"="orange", "Normal"="black")
+
+g1 <- dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.mean)) +
+  geom_point(aes(color=xBar.color)) +
+  geom_line() +
+  geom_hline(aes(yintercept=process.mean)) +
+  geom_line(aes(y=xBar.UCL)) +
+  geom_line(aes(y=xBar.LCL)) +
+  labs(y="Avg. Linewidth", x="Cassette") +
+  scale_color_manual(values = colorsKey) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+
+g2 <- dataLithoSumm |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.sd)) +
+  geom_point(aes(color=s.color)) +
+  geom_line() +
+  geom_hline(aes(yintercept=process.sd)) +
+  geom_line(aes(y=s.UCL)) +
+  geom_line(aes(y=s.LCL)) +
+  labs(y="StdDev. Linewidth", x="Cassette") +
+  scale_color_manual(values = colorsKey) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+
+gridExtra::grid.arrange(g1, g2)
+```
+
+
+## X-bar and R Charts
+
+X-Bar and R charts are pretty similar to X-Bar and S charts, the just use Range
+  instead of Standard Deviation. These charts are mostly used when groups are 
+  smaller than n=10. The Lithograph data has 15 measurements per cassette, but
+  it will be fine to use as an example.
+  
+We'll drop some of the data from the Lithograph dataset:
+
+```{r}
+dataLithoSubset <- dataLitho |> 
+  filter(WAFER < 3)
+```
+  
+Or use `subset()` for base R.
+  
+### SPC Calculations
+
+The calculations for the mean will be the same, but we'll calculate Range instead
+  of Standard Deviation.
+
+::: {.panel-tabset}
+
+#### base R
+```{r}
+#| label: summ-litho-base-range
+
+dataLithoRange <- aggregate(
+  # group LINEWIDT by CASSETTE
+  LINEWIDT~CASSETTE, 
+  data=dataLithoSubset,
+  # Calculate group mean, sd, and counts
+  FUN=function(x) c(mean=mean(x), 
+                    r=range(x)[2] - range(x)[1], 
+                    count=length(x))
+)
+
+# We get a funky data.frame from aggregate with 1 normal column and 1 matrix column. 
+# do.call will expand the matrix into separate columns. 
+# It's a bit like nest and unnest in dplyr. 
+dataLithoRange <- do.call(data.frame, dataLithoRange)
+
+
+dataLithoRange <- transform(
+  dataLithoRange,
+  
+  # Now we calculate the mean of means (x-bar-bar in the NIST handbook)
+  process.mean = mean(LINEWIDT.mean),
+
+  # and the mean of the standard deviations
+  process.range = mean(LINEWIDT.r)
+  )
+
+
+```
+
+#### dplyr
+```{r}
+#| label: summ-litho-dplyr-range
+#| message: false
+
+dataLithoRange <- dataLithoSubset |> 
+  
+  # first set the group
+  group_by(CASSETTE) |> 
+  
+  # Mean, SD, and Count for each run
+  summarise(LINEWIDT.mean = mean(LINEWIDT),
+            LINEWIDT.r = range(LINEWIDT)[2] - range(LINEWIDT)[1],
+            LINEWIDT.count = n()) |> 
+  
+  # Ungroup the data for the next step
+  ungroup() |> 
+  
+  # Overall process Mean and SD
+  mutate(
+    process.mean = mean(LINEWIDT.mean),
+    process.range = mean(LINEWIDT.r)
+  ) 
+```
+
+:::
+
+
+### Control Limits
+
+For X-Bar and R charts, A$_{2}$ is generally used instead of c$_{4}$ for the X-Bar
+  unbiased estimator, and D$_{3}$ and D$_{4}$ are used for the Range:
+
+```{r}
+#| label: estimator-table
+
+tablexBarR <- data.frame(
+  n=c(2:10),
+  a2 = c(1.880, 1.023, 0.729, 0.577, 0.483, 0.419, 0.373, 0.337, 0.308),
+  d3 = c(0, 0, 0, 0, 0, 0.076, 0.136, 0.184, 0.223),
+  d4 = c(3.267, 2.575, 2.282, 2.115, 2.004, 1.924, 1.864, 1.816, 1.777)
+)
+```
+
+Then we use this parameter to calculate the Upper and Lower Control 
+  Limits:
+
+::: {.panel-tabset}
+
+#### Base R
+```{r}
+#| label: base-r-control-limits-range
+#| eval: False
+
+dataLithoRange <- 
+  merge(dataLithoRange, tablexBarR, 
+        by.x = "LINEWIDT.count", by.y = "n") |> 
+  transform(
+    
+    # X-bar chart UCL & LCL
+    xBar.UCL = process.mean + a2 * process.range,
+    xBar.LCL = process.mean - a2 * process.range,
+    
+    # S chart UCL & LCL
+    r.UCL = process.range * d4,
+    r.LCL = process.range * d3
+    
+  )
+
+```
+
+#### dplyr
+```{r}
+#| label: dplyr-control-limits-range
+
+dataLithoRange <- dataLithoRange |> 
+  left_join(tablexBarR, by=c("LINEWIDT.count"="n")) |> 
+  mutate(
+    
+    # X-bar chart UCL & LCL
+    xBar.UCL = process.mean + a2 * process.range,
+    xBar.LCL = process.mean - a2 * process.range,
+    
+    # S chart UCL & LCL
+    r.UCL = process.range * d4,
+    r.LCL = process.range * d3
+    
+  )
+
+```
+
+:::
+
+### WECO Rules
+```{r}
+dataLithoRange <- dataLithoRange |> 
+mutate(
+    
+    xBar.beyond = ifelse((LINEWIDT.mean > xBar.UCL | LINEWIDT.mean < xBar.LCL), 1, 0),
+    
+    xBar.position = ifelse(LINEWIDT.mean > process.mean, 1, 
+                       ifelse(LINEWIDT.mean < process.mean, -1, 0)),
+    
+    xBar.csum = cumsum((xBar.position)),
+    
+    xBar.lag = xBar.csum - lag(xBar.csum, 7, default = 0),
+    xBar.violatingRun = if_else(abs(xBar.lag)>=7, 1, 0),
+    xBar.color=if_else(xBar.beyond == 1, "Beyond Limits", 
+                  if_else(xBar.violatingRun==1, "Violating Run", "Normal")),
+    
+    
+    
+    
+    r.beyond = ifelse((LINEWIDT.r > r.UCL | LINEWIDT.r < r.LCL), 1, 0),
+    r.position = ifelse(LINEWIDT.r > process.range, 1, 
+                       ifelse(LINEWIDT.r < process.range, -1, 0)),
+    r.csum = cumsum((r.position)),
+
+    r.lag = r.csum - lag(r.csum, 7, default = 0),
+    r.violatingRun = if_else(abs(r.lag)>=7, 1, 0),
+    r.color=if_else(r.beyond == 1, "Beyond Limits", 
+                  if_else(r.violatingRun==1, "Violating Run", "Normal"))
+  )
+```
+
+### X-Bar and R Chart
+```{r}
+#| label: fig-x-bar-and-r-lithograph-WECO
+#| fig-cap: "Lithograph X-Bar and R Charts With WECO Rules"
+
+colorsKey <- c("Beyond Limits"="red", "Violating Run"="orange", "Normal"="black")
+
+g1 <- dataLithoRange |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.mean)) +
+  geom_point(aes(color=xBar.color)) +
+  geom_line() +
+  geom_hline(aes(yintercept=process.mean)) +
+  geom_line(aes(y=xBar.UCL)) +
+  geom_line(aes(y=xBar.LCL)) +
+  labs(y="Avg. Linewidth", x="Cassette") +
+  scale_color_manual(values = colorsKey) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+
+g2 <- dataLithoRange |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.r)) +
+  geom_point(aes(color=r.color)) +
+  geom_line() +
+  geom_hline(aes(yintercept=process.range)) +
+  geom_line(aes(y=r.UCL)) +
+  geom_line(aes(y=r.LCL)) +
+  labs(y="Range of Linewidths", x="Cassette") +
+  scale_color_manual(values = colorsKey) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+
+gridExtra::grid.arrange(g1, g2)
+```
