@@ -1,6 +1,6 @@
 ---
 title: "Process Control Charts"
-date: "2023-01-19"
+date: "2023-01-20"
 categories: [Process Control, R, ggplot2, engineering, manufacturing, tidyverse, code]
 execute: 
   warning: false
