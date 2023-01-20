@@ -1,0 +1,52 @@
+---
+title: "Using R and RStudio with OneDrive/SharePoint"
+date: "2022-09-20"
+image: "onedrive_logo.png"
+categories: [notes, R, RStudio, Microsoft, OneDrive, SharePoint]
+---
+
+Love it or hate it, but Microsoft is fairly ubiquitous in any business environment.
+  That could be reliance on Excel spreadsheets and Word documents up to full-blown
+  Azure environments, PowerBI reports, etc. 
+  
+I have learned that there are some times when R and OneDrive butt heads, so here
+   are some tips for making them get along:
+   
+## Tip 1: Don't install R to a OneDrive folder
+
+Newer versions of R don't suggest this anymore, but be sure _not_ to install R
+  into a OneDrive synced folder like Documents. It sounds like a good idea for
+  portability, but updates will throw a great big wrench into things in a hurry,
+  trust me. This also applies to related software like quarto, rtools, python/conda,
+  really anything that can be installed locally as a normal user. 
+  
+## Tip 2: No R Projects (with some caveats)
+
+Unfortunately, this will also throw a wrench into things. R Studio makes a lot 
+  tiny folders with very deep folder trees and you can very quickly run into
+  Window's character limits. This is a major issue for RMarkdown/Quarto
+  documents, and will break the ability to view code output without rendering.
+  And then when you do render, all of those tiny deeply-nested files get changed
+  and OneDrive loses it's mind trying to track the changes. 
+  In fact, even when not using R Projects, it's a good idea to wait a little 
+  while between document renders for this very reason. 
+  
+The only real way to use R Projects is to keep them outside of OneDrive folders.
+  That works well, but then you lose the backup features of OneDrive. 
+  It really depends on your company's storage environment. 
+  
+In lieu of R Projects, the best suggestion I have is to make a new folder for any
+  project you're working on and keep all scripts and outputs there. It's not the
+  same as a project but it will get the job done. 
+
+## Tip 3: Always keep on this device
+
+This option (via right-click in Windows Explorer)
+  is a life-saver for reading data from shared locations. There's just
+  not a good way that I know of to access documents in the OneDrive/SharePoint
+  cloud, so keeping them synced on your local PC is the only way. 
+  `reaxl::read_xlsx` attempting access a file seems to trigger Windows to download
+  said file, but not always. And if a file is unchanged or unopened (at least as 
+  far as Windows knows) for a certain amount of time, that file may get removed 
+  locally to save storage space and then your scripts to read data will
+  stop working. 
