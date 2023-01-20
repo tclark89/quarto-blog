@@ -625,9 +625,10 @@ gridExtra::grid.arrange(g1, g2)
 
 ## I and MR Charts
 
-When the sample size is n=1, use the MR, or Moving Range, chart. The Moving Range
-  is the absolute difference between consecutive measurements. 
+When the sample size is n=1, use the I and MR, or Individuals and Moving Range, chart. 
+  The Moving Range is the absolute difference between consecutive measurements. 
 
+### Prepare the data
 ```{r}
 #| label: data-moving-range
 dataLithoMR <- dataLitho |>
@@ -642,9 +643,76 @@ dataLithoMR <- dataLitho |>
     
     # 1.128 is the value for d2=1
     xBar.UCL = process.mean + 3 * process.mr / 1.128,
-    xBar.UCL = process.mean - 3 * process.mr / 1.128
+    xBar.LCL = process.mean - 3 * process.mr / 1.128,
     
-    mr.UCL = 3.267
-    mr.LCL = 0
+    # 3.267 is D4 when n=2, 0 is D3 when n=2
+    mr.UCL = process.mr*3.267,
+    mr.LCL = process.mr*0,
+    
+    # Critical Limits for Individuals
+    xBar.beyond = if_else((LINEWIDT > xBar.UCL | LINEWIDT < xBar.LCL), 1, 0),
+    
+    xBar.position = ifelse(LINEWIDT > process.mean, 1, 
+                       if_else(LINEWIDT < process.mean, -1, 0)),
+    
+    xBar.csum = cumsum((xBar.position)),
+    
+    xBar.lag = xBar.csum - lag(xBar.csum, 7, default = 0),
+    xBar.violatingRun = if_else(abs(xBar.lag)>=7, 1, 0),
+    xBar.color=if_else(xBar.beyond == 1, "Beyond Limits", 
+                  if_else(xBar.violatingRun==1, "Violating Run", "Normal")),
+    
+    
+    
+    # Critical Limits for Moving Ranges
+    mr.beyond = if_else((LINEWIDT.mr > mr.UCL | LINEWIDT.mr < mr.LCL), 1, 0),
+    mr.beyond = if_else(is.na(mr.beyond), 0, mr.beyond),
+    
+    mr.position = if_else(LINEWIDT.mr > process.mr, 1, 
+                       if_else(LINEWIDT.mr < process.mr, -1, 0)),
+    mr.position = if_else(is.na(mr.position), 0, mr.position),
+    mr.csum = cumsum(mr.position),
+
+    mr.lag = mr.csum - lag(mr.csum, 7, default = 0),
+    mr.violatingRun = if_else(abs(mr.lag)>=7, 1, 0),
+    mr.color=if_else(mr.beyond == 1, "Beyond Limits", 
+                  if_else(mr.violatingRun==1, "Violating Run", "Normal"))
+    
   ) 
+```
+
+### I and MR Charts
+```{r}
+#| label: fig-i-and-mr-lithograph-WECO
+#| fig-cap: "Lithograph I and MR Charts With WECO Rules"
+
+colorsKey <- c("Beyond Limits"="red", "Violating Run"="orange", "Normal"="black")
+
+g1 <- dataLithoMR |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT)) +
+  geom_point(aes(color=xBar.color)) +
+  geom_line() +
+  geom_hline(aes(yintercept=process.mean)) +
+  geom_line(aes(y=xBar.UCL)) +
+  geom_line(aes(y=xBar.LCL)) +
+  labs(y="Linewidth", x="Cassette") +
+  scale_color_manual(values = colorsKey) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+
+g2 <- dataLithoMR |> 
+  ggplot(aes(x=CASSETTE, y=LINEWIDT.mr)) +
+  geom_point(aes(color=mr.color)) +
+  geom_line() +
+  geom_hline(aes(yintercept=process.mr)) +
+  geom_line(aes(y=mr.UCL)) +
+  geom_line(aes(y=mr.LCL)) +
+  labs(y="Moving Range of Linewidths", x="Cassette") +
+  scale_color_manual(values = colorsKey) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+
+gridExtra::grid.arrange(g1, g2)
 ```
