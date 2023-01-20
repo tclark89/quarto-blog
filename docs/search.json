@@ -173,5 +173,26 @@
     "title": "Process Control Charts",
     "section": "I and MR Charts",
     "text": "I and MR Charts\nWhen the sample size is n=1, use the I and MR, or Individuals and Moving Range, chart. The Moving Range is the absolute difference between consecutive measurements.\n\nPrepare the data\n\ndataLithoMR <- dataLitho |>\n  # Filter down to one measurement per cassette\n  filter(WAFER == 1, SITE == 1) |> \n  mutate(\n    # Find the Moving Range\n    LINEWIDT.mr = abs(LINEWIDT - lag(LINEWIDT, 1)),\n    \n    process.mean = mean(LINEWIDT),\n    process.mr = mean(LINEWIDT.mr, na.rm=T),\n    \n    # 1.128 is the value for d2=1\n    xBar.UCL = process.mean + 3 * process.mr / 1.128,\n    xBar.LCL = process.mean - 3 * process.mr / 1.128,\n    \n    # 3.267 is D4 when n=2, 0 is D3 when n=2\n    mr.UCL = process.mr*3.267,\n    mr.LCL = process.mr*0,\n    \n    # Critical Limits for Individuals\n    xBar.beyond = if_else((LINEWIDT > xBar.UCL | LINEWIDT < xBar.LCL), 1, 0),\n    \n    xBar.position = ifelse(LINEWIDT > process.mean, 1, \n                       if_else(LINEWIDT < process.mean, -1, 0)),\n    \n    xBar.csum = cumsum((xBar.position)),\n    \n    xBar.lag = xBar.csum - lag(xBar.csum, 7, default = 0),\n    xBar.violatingRun = if_else(abs(xBar.lag)>=7, 1, 0),\n    xBar.color=if_else(xBar.beyond == 1, \"Beyond Limits\", \n                  if_else(xBar.violatingRun==1, \"Violating Run\", \"Normal\")),\n    \n    \n    \n    # Critical Limits for Moving Ranges\n    mr.beyond = if_else((LINEWIDT.mr > mr.UCL | LINEWIDT.mr < mr.LCL), 1, 0),\n    mr.beyond = if_else(is.na(mr.beyond), 0, mr.beyond),\n    \n    mr.position = if_else(LINEWIDT.mr > process.mr, 1, \n                       if_else(LINEWIDT.mr < process.mr, -1, 0)),\n    mr.position = if_else(is.na(mr.position), 0, mr.position),\n    mr.csum = cumsum(mr.position),\n\n    mr.lag = mr.csum - lag(mr.csum, 7, default = 0),\n    mr.violatingRun = if_else(abs(mr.lag)>=7, 1, 0),\n    mr.color=if_else(mr.beyond == 1, \"Beyond Limits\", \n                  if_else(mr.violatingRun==1, \"Violating Run\", \"Normal\"))\n    \n  ) \n\n\n\nI and MR Charts\n\ncolorsKey <- c(\"Beyond Limits\"=\"red\", \"Violating Run\"=\"orange\", \"Normal\"=\"black\")\n\ng1 <- dataLithoMR |> \n  ggplot(aes(x=CASSETTE, y=LINEWIDT)) +\n  geom_point(aes(color=xBar.color)) +\n  geom_line() +\n  geom_hline(aes(yintercept=process.mean)) +\n  geom_line(aes(y=xBar.UCL)) +\n  geom_line(aes(y=xBar.LCL)) +\n  labs(y=\"Linewidth\", x=\"Cassette\") +\n  scale_color_manual(values = colorsKey) +\n  theme_bw() +\n  theme(legend.position = \"none\")\n\n\ng2 <- dataLithoMR |> \n  ggplot(aes(x=CASSETTE, y=LINEWIDT.mr)) +\n  geom_point(aes(color=mr.color)) +\n  geom_line() +\n  geom_hline(aes(yintercept=process.mr)) +\n  geom_line(aes(y=mr.UCL)) +\n  geom_line(aes(y=mr.LCL)) +\n  labs(y=\"Moving Range of Linewidths\", x=\"Cassette\") +\n  scale_color_manual(values = colorsKey) +\n  theme_bw() +\n  theme(legend.position = \"none\")\n\n\ngridExtra::grid.arrange(g1, g2)\n\n\n\n\nFigure 7: Lithograph I and MR Charts With WECO Rules"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Tyler Clark",
+    "section": "",
+    "text": "I have been working as a data analyst and statistician since 2016, and have always had a passion for learning, technology, and getting things done. In my spare time I enjoy tinkering with computers and software, playing and writing music, settling in for a long session with my charcoal smoker, or just getting outside."
+  },
+  {
+    "objectID": "index.html#education",
+    "href": "index.html#education",
+    "title": "Tyler Clark",
+    "section": "Education",
+    "text": "Education\n\nUniversity of Arkansas: Fayetteville, AR | 2013-2015\n\nM.S. in Poultry Science with an emphasis on applied Statistics and Analytics\n\nUniversity of Arkansas: Fayetteville, AR | 2007-2011\n\nBS in Poultry Science\nMinor in Agricultural Business\n\nElkins High School: Elkins, AR | 2003-2007\n\nSalutatorian\nFFA Officer\nFFA Poultry Judging Team State Finalist"
+  },
+  {
+    "objectID": "index.html#experience",
+    "href": "index.html#experience",
+    "title": "Tyler Clark",
+    "section": "Experience",
+    "text": "Experience\n\nButterball, LLC - 2016-Present\n\nLive Operations\nAnalytics and Statistics\nResearch\nBusiness Planning\nProcess Control\n\n\nThis website is written using Quarto and Rstudio. The source code is available on GitHub"
   }
 ]
