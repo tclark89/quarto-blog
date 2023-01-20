@@ -2,6 +2,7 @@
 title: "Process Control Charts"
 date: "2023-01-20"
 categories: [Process Control, R, ggplot2, engineering, manufacturing, tidyverse, code]
+image: "fig-x-bar-and-s-lithograph-WECO-1.png"
 execute: 
   warning: false
 ---
