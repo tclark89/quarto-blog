@@ -1,0 +1,130 @@
+---
+title: "Using Crosstalk"
+date: "2023-01-23"
+categories: [crosstalk, R, ggplot2, plotly, code]
+execute: 
+  warning: false
+---
+
+Most everyone who works with data is familiar with or at least aware of 
+  [Shiny](https://shiny.rstudio.com/) and all of the great things you can do
+  with it's interactive capabilities. However, Shiny also requires some extra work
+  on the backend that may not be available to everyone. I can write Shiny apps
+  all day, but I can't share them with coworkers since they don't have R/Rstudio,
+  and my employer doesn't have a Shiny server, nor do we have an account with 
+  [shinyapps.io](https://www.shinyapps.io/). 
+  
+Most of the time when I need to share some data that I have worked on in R I use
+  Rmarkdown/Quarto, with a PDF or Word output for printing purposes and an HTML
+  report that uses Plotly, DT, Knitr, etc. to give some level of quasi-interactivity.
+  
+However, the `crosstalk` library allows users to bridge the gap somewhat between
+  a fully interactive Shiny document and a fixed Rmarkdown/Quarto document.
+
+
+## The Basics
+
+### Libraries
+
+First things first, we'll need to load some libraries:
+
+```{r}
+#| label: libraries
+
+library(tidyverse)
+library(crosstalk)
+library(d3scatter)
+library(plotly)
+library(rgl)
+library(DT)
+library(summarywidget)
+
+```
+
+ - Tidyverse: Needs no explanation
+ - Crosstalk: This is the magic sauce
+ - d3scatter: Simple plots (think `ggplot() + theme_bw()`) that work with `crosstalk`
+ - plotly: Wonderful interactive plots on their own, `plotly` plots can be made 
+    more interactive with `crosstalk`
+ - rgl: 3D plots!
+ - DT: DT makes tables that already have filtering and responsiveness built-in,
+    but we can use crosstalk to further filter and update in sync with the plots
+ - summarywidget: This lets us generate summary values, like you might do in Shiny
+
+
+I don't use maps in my work, but leaflet can also use crosstalk:
+```{r}
+#| label: library-leaflet 
+#| eval: false
+
+library(leaflet)
+```
+
+
+### Simple Plots
+
+
+```{r}
+mtcars |> 
+  ggplot(aes(x=wt, y=mpg, color=factor(cyl))) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  theme_bw()
+```
+
+
+```{r}
+sharedMtCars <- SharedData$new(mtcars)
+
+
+cylCheckbox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+d3Plot <- d3scatter(sharedMtCars, ~wt, ~mpg, ~factor(cyl), width="100%")
+```
+
+::: {.columns}
+
+:::: {.column width="20%"}
+```{r}
+#| echo: false
+cylCheckbox
+```
+::::
+
+:::: {.column width="80%"}
+```{r}
+#| echo: false
+d3Plot
+```
+::::
+
+:::
+
+
+
+```{r}
+sharedMtCars <- SharedData$new(mtcars)
+
+
+cylCheckbox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+plotlyPlot <- plot_ly(sharedMtCars, x=~wt, y=~mpg, color = ~factor(cyl))
+```
+
+::: {.columns}
+
+:::: {.column width="30%"}
+```{r}
+#| echo: false
+cylCheckbox
+```
+::::
+
+:::: {.column width="70%"}
+```{r}
+#| echo: false
+plotlyPlot
+```
+::::
+
+:::
+
+
