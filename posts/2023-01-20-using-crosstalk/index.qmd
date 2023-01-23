@@ -22,9 +22,7 @@ However, the `crosstalk` library allows users to bridge the gap somewhat between
   a fully interactive Shiny document and a fixed Rmarkdown/Quarto document.
 
 
-## The Basics
-
-### Libraries
+## Libraries
 
 First things first, we'll need to load some libraries:
 
@@ -61,8 +59,42 @@ library(leaflet)
 ```
 
 
-### Simple Plots
+## The Basics
 
+To use crosstalk, we have to create a SharedData object:
+```{r}
+sharedMtCars <- SharedData$new(mtcars)
+```
+
+Then we use these objects like data.frames in crosstalk-compatible widgets.
+
+`crosstalk` also provides some `filter_*` functions:
+```{r}
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+```
+
+```{r}
+filter_select("am", "Automatic", sharedMtCars, ~am)
+```
+
+```{r}
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+```
+
+Changing the selected values will cause this plot to update, no need for Shiny:
+```{r}
+d3scatter(sharedMtCars, ~wt, ~mpg, ~factor(cyl), width="100%")
+```
+
+
+
+## Simple Plots
+
+### ggplot
+
+We can use the `mtcars` data to make a simple plot comparing the car's weight as 
+  the independent variable and the Miles per Gallon as the dependent variable
+  with engine cylinders as an additional factor.
 
 ```{r}
 mtcars |> 
@@ -72,12 +104,22 @@ mtcars |>
   theme_bw()
 ```
 
+That's a simple plot and it tells a story, but if we want to drill down at all
+  we'd have to make a new plot with fixed parameters. This is where `crosstalk`
+  and the compatible widgets come in.
+
+### d3scatter
+
+d3scatter is a dead-simple library for graphs that work with crosstalk. 
+  `filter_checkbox` allows us to select the cars by their number of cylinders in
+  a checkbox tool.
+  
 
 ```{r}
 sharedMtCars <- SharedData$new(mtcars)
 
-
 cylCheckbox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+
 d3Plot <- d3scatter(sharedMtCars, ~wt, ~mpg, ~factor(cyl), width="100%")
 ```
 
@@ -100,6 +142,8 @@ d3Plot
 :::
 
 
+
+### Plotly
 
 ```{r}
 sharedMtCars <- SharedData$new(mtcars)
