@@ -189,8 +189,7 @@ carsSlider
 :::: {.column width="40%"}
 ```{r}
 #| echo: false
-plotlyMpg |> 
-  layout(show.legend=F)
+plotlyMpg 
 ```
 ::::
 
