@@ -38,24 +38,18 @@ library(summarywidget)
 
 ```
 
- - Tidyverse: Needs no explanation
- - Crosstalk: This is the magic sauce
+ - tidyverse: Needs no explanation
+ - crosstalk: This is the magic sauce
  - d3scatter: Simple plots (think `ggplot() + theme_bw()`) that work with `crosstalk`
  - plotly: Wonderful interactive plots on their own, `plotly` plots can be made 
     more interactive with `crosstalk`
- - rgl: 3D plots!
  - DT: DT makes tables that already have filtering and responsiveness built-in,
     but we can use crosstalk to further filter and update in sync with the plots
  - summarywidget: This lets us generate summary values, like you might do in Shiny
 
 
-I don't use maps in my work, but leaflet can also use crosstalk:
-```{r}
-#| label: library-leaflet 
-#| eval: false
-
-library(leaflet)
-```
+Other crosstalk compatible libraries are `leaflet` for mapping and `rgl` for 
+  interactive 3d plotting.
 
 
 ## The Basics
