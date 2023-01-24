@@ -160,27 +160,44 @@ carsPlothp
 
 ### Plotly
 
+Plotly graphs are already responsive and allow zooming and selection, but using 
+  crosstalk `filter_` functions we can do even more selection than what would be
+  available otherwise, with the effects carrying over into other plots. 
+
 ```{r}
 sharedMtCars <- SharedData$new(mtcars)
 
+carsCheckBox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+carsSelect <- filter_select("am", "Automatic", sharedMtCars, ~am)
+carsSlider <- filter_slider("disp", "Displacement", sharedMtCars, ~disp)
 
-cylCheckbox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
-plotlyPlot <- plot_ly(sharedMtCars, x=~wt, y=~mpg, color = ~factor(cyl))
+plotlyMpg <- plot_ly(sharedMtCars, x=~wt, y=~mpg, color = ~factor(cyl))
+plotlyHp <- plot_ly(sharedMtCars, x=~wt, y=~hp, color = ~factor(cyl))
 ```
 
 ::: {.columns}
 
-:::: {.column width="30%"}
+:::: {.column width="20%"}
 ```{r}
 #| echo: false
-cylCheckbox
+carsCheckBox
+carsSelect
+carsSlider
 ```
 ::::
 
-:::: {.column width="70%"}
+:::: {.column width="40%"}
 ```{r}
 #| echo: false
-plotlyPlot
+plotlyMpg |> 
+  layout(show.legend=F)
+```
+::::
+
+:::: {.column width="40%"}
+```{r}
+#| echo: false
+plotlyHp
 ```
 ::::
 
