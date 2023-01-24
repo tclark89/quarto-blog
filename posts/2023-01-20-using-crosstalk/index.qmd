@@ -197,12 +197,4 @@ plotlyHp
 :::
 
 
-### RGL
-
-```{r}
-mtcars3D <- plot3d(x=mtcars$wt, y=mtcars$hp, mtcars$mpg, col=factor(mtcars$cyl))
-sharedData <- rglShared(mtcars3D["data"])
-filter_slider("wt", "Weight", sharedData, ~x)
-rglwidget(shared = sharedData)
-```
 
