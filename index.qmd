@@ -23,34 +23,7 @@ I have been working as a data analyst and statistician since 2016, and
   and software, playing and writing music, settling in for a long
   session with my charcoal smoker, or just getting outside. 
 
-## Education 
-
-- **University of Arkansas**: Fayetteville, AR | 2013-2015
-  - M.S. in Poultry Science with an emphasis on 
-    applied Statistics and Analytics
-    
-- **University of Arkansas**: Fayetteville, AR | 2007-2011
-  - BS in Poultry Science
-  - Minor in Agricultural Business
-
-- **Elkins High School**: Elkins, AR | 2003-2007
-  - Salutatorian
-  - FFA Officer
-  - FFA Poultry Judging Team State Finalist
-  
-
-## Experience
-
-- **Butterball, LLC** - 2016-Present
-  - Live Operations
-  - Analytics and Statistics
-  - Research
-  - Business Planning
-  - Process Control
-
-
-
-
+[Resume](resume.qmd)
 
 
 This website is written using Quarto and Rstudio. 
