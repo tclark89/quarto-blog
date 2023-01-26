@@ -2,6 +2,10 @@
 title: "Tyler Clark"
 ---
 
+::: {.columns}
+
+:::: {.column width="50%"}
+
 ## Experience
 
 - **Butterball, LLC** - 2016-Present
@@ -10,6 +14,10 @@ title: "Tyler Clark"
   - Research
   - Business Planning
   - Process Control
+
+::::
+
+:::: {.column width="50%"}
 
 ## Education 
 
@@ -25,3 +33,7 @@ title: "Tyler Clark"
   - Salutatorian
   - FFA Officer
   - FFA Poultry Judging Team State Finalist
+  
+::::
+
+:::
