@@ -7,6 +7,9 @@ website:
   site-url: https://tclark89.github.io/quarto-blog/
   description: "Tyler's personal blog"
   navbar:
+    left: 
+      - text: Resume
+        href: resume.qmd
     right:
       - blog.qmd
       - text: Archive
