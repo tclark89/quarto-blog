@@ -209,3 +209,30 @@ plotlyHp
 
 
 ## Datatables
+
+Crosstalk can also update DT objects.
+
+```{r}
+#| label: dt-filter-plots
+#| eval: FALSE
+sharedMtCars <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+datatable(sharedMtCars)
+```
+
+
+```{r}
+#| label: dt-filter-plots-eval
+#| echo: FALSE
+sharedMtCars <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+datatable(sharedMtCars)
+```
