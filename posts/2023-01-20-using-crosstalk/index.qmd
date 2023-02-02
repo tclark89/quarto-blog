@@ -32,7 +32,6 @@ library(tidyverse)
 library(crosstalk)
 library(d3scatter)
 library(plotly)
-library(rgl)
 library(DT)
 library(summarywidget)
 
@@ -56,6 +55,7 @@ Other crosstalk compatible libraries are `leaflet` for mapping and `rgl` for
 
 To use crosstalk, we have to create a SharedData object:
 ```{r}
+#| label: data-sharedMtCars
 sharedMtCars <- SharedData$new(mtcars)
 ```
 
@@ -63,6 +63,7 @@ Then we use these objects like data.frames in crosstalk-compatible widgets.
 
 `crosstalk` also provides some `filter_*` functions:
 ```{r}
+#| label: basic-d3scatter-with-filters
 carsCheckBox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
 carsSelect <- filter_select("am", "Automatic", sharedMtCars, ~am)
 carsSlider <- filter_slider("disp", "Displacement", sharedMtCars, ~disp)
@@ -76,6 +77,7 @@ Changing the selected values will cause this plot to update, no need for Shiny:
 
 :::: {.column width="30%"}
 ```{r}
+#| label: basic-filters
 #| echo: false
 carsCheckBox
 carsSelect
@@ -85,6 +87,7 @@ carsSlider
 
 :::: {.column width="70%"}
 ```{r}
+#| label: basic-plot
 #| echo: false
 carsPlot
 ```
@@ -109,6 +112,7 @@ d3scatter is a dead-simple library for graphs that work with crosstalk. As seen
 What's really neat about crosstalk is that we can update multiple plots at once:
 
 ```{r}
+#| label: simple-plots-filters-plots
 # create a new SharedObject so we're not manipulating everything on the page:
 sharedMtCars <- SharedData$new(mtcars)
 
@@ -125,6 +129,7 @@ carsPlothp <- d3scatter(sharedMtCars, ~wt, ~hp, ~factor(cyl), width="100%")
 
 :::: {.column width="30%"}
 ```{r}
+#| label: simple-plots-filters
 #| echo: false
 carsCheckBox
 carsSelect
@@ -134,6 +139,7 @@ carsSlider
 
 :::: {.column width="35%"}
 ```{r}
+#| label: simple-plot-mpg
 #| echo: false
 carsPlotMpg
 ```
@@ -141,6 +147,7 @@ carsPlotMpg
 
 :::: {.column width="35%"}
 ```{r}
+#| label: simple-plot-hp
 #| echo: false
 carsPlothp
 ```
@@ -159,6 +166,7 @@ Plotly graphs are already responsive and allow zooming and selection, but using
   available otherwise, with the effects carrying over into other plots. 
 
 ```{r}
+#| label: plotly-filter-plots
 sharedMtCars <- SharedData$new(mtcars)
 
 carsCheckBox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
@@ -173,6 +181,7 @@ plotlyHp <- plot_ly(sharedMtCars, x=~wt, y=~hp, color = ~factor(cyl))
 
 :::: {.column width="20%"}
 ```{r}
+#| label: plotly-filters
 #| echo: false
 carsCheckBox
 carsSelect
@@ -182,6 +191,7 @@ carsSlider
 
 :::: {.column width="40%"}
 ```{r}
+#| label: plotly-plot-mpg
 #| echo: false
 plotlyMpg 
 ```
@@ -189,6 +199,7 @@ plotlyMpg
 
 :::: {.column width="40%"}
 ```{r}
+#| label: plotly-plot-hp
 #| echo: false
 plotlyHp
 ```
