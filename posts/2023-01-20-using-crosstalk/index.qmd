@@ -208,9 +208,9 @@ plotlyHp
 :::
 
 
-## Datatables
+## Data Tables
 
-Crosstalk can also update DT objects.
+Crosstalk can also update DT objects:
 
 ```{r}
 #| label: dt-filter-plots
@@ -236,3 +236,6 @@ filter_slider("disp", "Displacement", sharedMtCars, ~disp)
 
 datatable(sharedMtCars)
 ```
+
+
+## Summary Values
