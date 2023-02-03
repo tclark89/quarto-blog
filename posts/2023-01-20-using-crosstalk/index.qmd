@@ -282,22 +282,43 @@ Putting these pieces of code together, we can render the following:
 ```{r}
 #| label: summarywidget-filter-eval
 #| echo: false
-sharedMtCars2 <- SharedData$new(mtcars)
+sharedMtCars <- SharedData$new(mtcars)
 
-filter_checkbox("cyl", "Cylinders", sharedMtCars2, ~cyl, inline=T)
-filter_select("am", "Automatic", sharedMtCars2, ~am)
-filter_slider("disp", "Displacement", sharedMtCars2, ~disp)
-
-foo <- summarywidget(sharedMtCars2, statistic = "count", digits=0)
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
 ```
 ::::
 
-:::: {.column width="70%"}
+:::: {.column width="10%"}
+::::
 
+:::: {.column width="60%"}
 
+Total cars selected:
+```{r}
+#| echo: false
+summarywidget(sharedMtCars, statistic = "count", digits=0)
+```
+
+<br>
+Average MPG:
+```{r}
+#| echo: false
+summarywidget(sharedMtCars, statistic = "mean", column = "mpg", digits=1)
+```
+
+<br>
+Average MPG (Manuals only):
+```{r}
+#| echo: false
+summarywidget(sharedMtCars, statistic = "mean", column = "mpg", digits=1,
+              selection = ~am == 0)
+```
   
 ::::
 
 :::
 
-You have selected `r summarywidget(sharedMtCars2, statistic = "count", digits=0)` cars.
+Note: summarywidget can be used inline in rmarkdown documents rendered with knitr,
+  but Quarto doesn't want to play nicely with that yet. 
