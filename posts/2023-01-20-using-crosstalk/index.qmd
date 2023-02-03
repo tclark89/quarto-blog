@@ -239,3 +239,65 @@ datatable(sharedMtCars)
 
 
 ## Summary Values
+
+The crosstalk-compatible library `summarywidget` allows for simple summaries
+  of SharedData objects:
+
+```{r}
+#| label: summarywidget-filter-values
+#| eval: FALSE
+sharedMtCars <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+# Counts
+summarywidget(sharedMtCars, statistic = "count", digits=0)
+
+# Means
+summarywidget(sharedMtCars, statistic = "mean", column = "mpg", digits=1)
+
+# Sum
+summarywidget(sharedMtCars, statistic = "sum", column = "disp", digits=1)
+```
+
+These can be evaluated in text passages for ready-made summary statements.
+
+`summarywidget` can also apply to summary to a subset of the SharedData. This 
+  example averages mpg for automatic transmissions only:
+
+```{r}
+#| label: summarywidget-subset
+#| eval: false
+summarywidget(sharedMtCars, statistic = "mean", 
+              column = "mpg", digits=1, selection = ~am == 0)
+```
+
+Putting these pieces of code together, we can render the following:
+
+::: {.columns}
+
+:::: {.column width="30%"}
+```{r}
+#| label: summarywidget-filter-eval
+#| echo: false
+sharedMtCars2 <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars2, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars2, ~am)
+filter_slider("disp", "Displacement", sharedMtCars2, ~disp)
+
+foo <- summarywidget(sharedMtCars2, statistic = "count", digits=0)
+```
+::::
+
+:::: {.column width="70%"}
+
+
+  
+::::
+
+:::
+
+You have selected `r summarywidget(sharedMtCars2, statistic = "count", digits=0)` cars.
