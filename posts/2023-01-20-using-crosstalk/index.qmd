@@ -322,3 +322,6 @@ summarywidget(sharedMtCars, statistic = "mean", column = "mpg", digits=1,
 
 Note: summarywidget can be used inline in rmarkdown documents rendered with knitr,
   but Quarto doesn't want to play nicely with that yet. 
+  
+To see a complete dashboard click
+[here](https://tclark89.github.io/crosstalk-mtcars-dashboard/).
