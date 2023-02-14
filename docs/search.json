@@ -1,0 +1,86 @@
+[
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nUsing Crosstalk\n\n\n4 min\n\n\n\ncrosstalk\n\n\nR\n\n\nggplot2\n\n\nplotly\n\n\ncode\n\n\n\n\n\n\n\nFeb 14, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProcess Control Charts\n\n\n17 min\n\n\n\nProcess Control\n\n\nR\n\n\nggplot2\n\n\nengineering\n\n\nmanufacturing\n\n\ntidyverse\n\n\ncode\n\n\n\n\n\n\n\nJan 20, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMy Approach to Tables in Quarto Documents\n\n\n10 min\n\n\n\nquarto\n\n\nrmarkdown\n\n\nknitr\n\n\nkableExtra\n\n\nflextable\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nUsing R and RStudio with OneDrive/SharePoint\n\n\n2 min\n\n\n\nnotes\n\n\nR\n\n\nRStudio\n\n\nMicrosoft\n\n\nOneDrive\n\n\nSharePoint\n\n\n\n\n\n\n\nSep 20, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDplyr’s case_when\n\n\n3 min\n\n\n\ntidyverse\n\n\ndplyr\n\n\nnotes\n\n\ncode\n\n\nR\n\n\n\n\n\n\n\nSep 13, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMy Home RStudio Setup\n\n\n6 min\n\n\n\nDocker\n\n\nRocker Project\n\n\nR\n\n\nRStudio\n\n\nLinux\n\n\n\n\n\n\n\nSep 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPower Query Tip - Opening Multiple Files\n\n\n4 min\n\n\n\nMicrosoft\n\n\nPowerBI\n\n\nM Code\n\n\nExcel\n\n\ncode\n\n\nnotes\n\n\n\n\n\n\n\nSep 5, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSome Notes About Flatpak\n\n\n2 min\n\n\n\nflatpak\n\n\nlinux\n\n\nnotes\n\n\ndebian\n\n\narchlinux\n\n\n\n\n\n\n\nSep 4, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMy favorite R packages\n\n\n1 min\n\n\n\nR\n\n\nRstudio\n\n\ntidyverse\n\n\n\n\n\n\n\nSep 3, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n0 min\n\n\n\nnews\n\n\n\n\n\n\n\nSep 3, 2022\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/2023-02-14-using-crosstalk/index.html",
+    "href": "posts/2023-02-14-using-crosstalk/index.html",
+    "title": "Using Crosstalk",
+    "section": "",
+    "text": "Most everyone who works with data is familiar with or at least aware of Shiny and all of the great things you can do with it’s interactive capabilities. However, Shiny also requires some extra work on the backend that may not be available to everyone. I can write Shiny apps all day, but I can’t share them with coworkers since they don’t have R/Rstudio, and my employer doesn’t have a Shiny server, nor do we have an account with shinyapps.io.\nMost of the time when I need to share some data that I have worked on in R I use Rmarkdown/Quarto, with a PDF or Word output for printing purposes and an HTML report that uses Plotly, DT, Knitr, etc. to give some level of responsiveness. However, the crosstalk library allows users to bridge the gap between a fully interactive Shiny document and a fixed Rmarkdown/Quarto document."
+  },
+  {
+    "objectID": "posts/2023-02-14-using-crosstalk/index.html#libraries",
+    "href": "posts/2023-02-14-using-crosstalk/index.html#libraries",
+    "title": "Using Crosstalk",
+    "section": "Libraries",
+    "text": "Libraries\nFirst things first, we’ll need to load some libraries:\n\nlibrary(tidyverse)\nlibrary(crosstalk)\nlibrary(d3scatter)\nlibrary(plotly)\nlibrary(DT)\nlibrary(summarywidget)\n\n\ntidyverse: Needs no explanation\ncrosstalk: This is the magic sauce\nd3scatter: Simple plots (think ggplot() + theme_bw()) that work with crosstalk\nplotly: Wonderful interactive plots on their own, plotly plots can be made more interactive with crosstalk\nDT: DT makes tables that already have filtering and responsiveness built-in, but we can use crosstalk to further filter and update in sync with the plots\nsummarywidget: This lets us generate summary values, like you might do in Shiny\n\nOther crosstalk compatible libraries are leaflet for mapping and rgl for interactive 3d plotting."
+  },
+  {
+    "objectID": "posts/2023-02-14-using-crosstalk/index.html#the-basics",
+    "href": "posts/2023-02-14-using-crosstalk/index.html#the-basics",
+    "title": "Using Crosstalk",
+    "section": "The Basics",
+    "text": "The Basics\nTo use crosstalk, we have to create a SharedData object:\n\nsharedMtCars <- SharedData$new(mtcars)\n\nThen we use these objects like data.frames in crosstalk-compatible widgets.\ncrosstalk also provides some filter_* functions:\n\ncarsCheckBox <- filter_checkbox(\"cyl\", \"Cylinders\", sharedMtCars, ~cyl, inline=T)\ncarsSelect <- filter_select(\"am\", \"Automatic\", sharedMtCars, ~am)\ncarsSlider <- filter_slider(\"disp\", \"Displacement\", sharedMtCars, ~disp)\n\ncarsPlot <- d3scatter(sharedMtCars, ~wt, ~mpg, ~factor(cyl), width=\"100%\")\n\nChanging the selected values will cause this plot to update, no need for Shiny:\n\n\n\n\n\nCylinders\n\n\n\n4\n\n\n\n6\n\n\n\n8\n\n\n\n\n\n\n\nAutomatic\n\n\n\n\n\n\n\n\nDisplacement"
+  },
+  {
+    "objectID": "posts/2023-02-14-using-crosstalk/index.html#simple-plots",
+    "href": "posts/2023-02-14-using-crosstalk/index.html#simple-plots",
+    "title": "Using Crosstalk",
+    "section": "Simple Plots",
+    "text": "Simple Plots\n\nd3scatter\nd3scatter is a dead-simple library for graphs that work with crosstalk. As seen above, it’s very much like a simple ggplot in appearance. As long as the plot and all of the filter_* functions use the same SharedData object, then the plot will update in real time with the various selections.\nWhat’s really neat about crosstalk is that we can update multiple plots at once:\n\n# create a new SharedObject so we're not manipulating everything on the page:\nsharedMtCars <- SharedData$new(mtcars)\n\ncarsCheckBox <- filter_checkbox(\"cyl\", \"Cylinders\", sharedMtCars, ~cyl, inline=T)\ncarsSelect <- filter_select(\"am\", \"Automatic\", sharedMtCars, ~am)\ncarsSlider <- filter_slider(\"disp\", \"Displacement\", sharedMtCars, ~disp)\n\ncarsPlotMpg <- d3scatter(sharedMtCars, ~wt, ~mpg, ~factor(cyl), width=\"100%\")\ncarsPlothp <- d3scatter(sharedMtCars, ~wt, ~hp, ~factor(cyl), width=\"100%\")\n\n\n\n\n\n\nCylinders\n\n\n\n4\n\n\n\n6\n\n\n\n8\n\n\n\n\n\n\n\nAutomatic\n\n\n\n\n\n\n\n\nDisplacement\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nd3scatter also allows click-and-drag selection of points, which will also be applied to any other d3scatter plots using the same SharedData.\n\n\nPlotly\nPlotly graphs are already responsive and allow zooming and selection, but using crosstalk filter_ functions we can do even more selection than what would be available otherwise, with the effects carrying over into other plots.\n\nsharedMtCars <- SharedData$new(mtcars)\n\ncarsCheckBox <- filter_checkbox(\"cyl\", \"Cylinders\", sharedMtCars, ~cyl, inline=T)\ncarsSelect <- filter_select(\"am\", \"Automatic\", sharedMtCars, ~am)\ncarsSlider <- filter_slider(\"disp\", \"Displacement\", sharedMtCars, ~disp)\n\nplotlyMpg <- plot_ly(sharedMtCars, x=~wt, y=~mpg, color = ~factor(cyl))\nplotlyHp <- plot_ly(sharedMtCars, x=~wt, y=~hp, color = ~factor(cyl))\n\n\n\n\n\n\nCylinders\n\n\n\n4\n\n\n\n6\n\n\n\n8\n\n\n\n\n\n\n\nAutomatic\n\n\n\n\n\n\n\n\nDisplacement"
+  },
+  {
+    "objectID": "posts/2023-02-14-using-crosstalk/index.html#data-tables",
+    "href": "posts/2023-02-14-using-crosstalk/index.html#data-tables",
+    "title": "Using Crosstalk",
+    "section": "Data Tables",
+    "text": "Data Tables\nCrosstalk can also update DT objects:\n\nsharedMtCars <- SharedData$new(mtcars)\n\nfilter_checkbox(\"cyl\", \"Cylinders\", sharedMtCars, ~cyl, inline=T)\nfilter_select(\"am\", \"Automatic\", sharedMtCars, ~am)\nfilter_slider(\"disp\", \"Displacement\", sharedMtCars, ~disp)\n\ndatatable(sharedMtCars)\n\n\n\n\nCylinders\n\n\n\n4\n\n\n\n6\n\n\n\n8\n\n\n\n\n\n\n\nAutomatic\n\n\n\n\n\n\n\n\nDisplacement"
+  },
+  {
+    "objectID": "posts/2023-02-14-using-crosstalk/index.html#summary-values",
+    "href": "posts/2023-02-14-using-crosstalk/index.html#summary-values",
+    "title": "Using Crosstalk",
+    "section": "Summary Values",
+    "text": "Summary Values\nThe crosstalk-compatible library summarywidget allows for simple summaries of SharedData objects:\n\nsharedMtCars <- SharedData$new(mtcars)\n\nfilter_checkbox(\"cyl\", \"Cylinders\", sharedMtCars, ~cyl, inline=T)\nfilter_select(\"am\", \"Automatic\", sharedMtCars, ~am)\nfilter_slider(\"disp\", \"Displacement\", sharedMtCars, ~disp)\n\n# Counts\nsummarywidget(sharedMtCars, statistic = \"count\", digits=0)\n\n# Means\nsummarywidget(sharedMtCars, statistic = \"mean\", column = \"mpg\", digits=1)\n\n# Sum\nsummarywidget(sharedMtCars, statistic = \"sum\", column = \"disp\", digits=1)\n\nThese can be evaluated in text passages for ready-made summary statements.\nsummarywidget can also apply to summary to a subset of the SharedData. This example averages mpg for automatic transmissions only:\n\nsummarywidget(sharedMtCars, statistic = \"mean\", \n              column = \"mpg\", digits=1, selection = ~am == 0)\n\nPutting these pieces of code together, we can render the following:\n\n\n\n\n\nCylinders\n\n\n\n4\n\n\n\n6\n\n\n\n8\n\n\n\n\n\n\n\nAutomatic\n\n\n\n\n\n\n\n\nDisplacement\n\n\n\n\n\n\n\n\nTotal cars selected:\n\n\n\n\n\n\n Average MPG:\n\n\n\n\n\n\n Average MPG (Manuals only):\n\n\n\n\n\n\n\n\nNote: summarywidget can be used inline in rmarkdown documents rendered with knitr, but Quarto doesn’t want to play nicely with that yet.\nTo see a complete dashboard click here."
+  },
+  {
+    "objectID": "archive.html",
+    "href": "archive.html",
+    "title": "Archive",
+    "section": "",
+    "text": "Using Crosstalk\n\n\n\n\n\n\n\n\n\nFeb 14, 2023\n\n\n\n\n\n\n\n\nProcess Control Charts\n\n\n\n\n\n\n\n\n\nJan 20, 2023\n\n\n\n\n\n\n\n\nMy Approach to Tables in Quarto Documents\n\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\n\n\n\n\n\n\nUsing R and RStudio with OneDrive/SharePoint\n\n\n\n\n\n\n\n\n\nSep 20, 2022\n\n\n\n\n\n\n\n\nDplyr’s case_when\n\n\n\n\n\n\n\n\n\nSep 13, 2022\n\n\n\n\n\n\n\n\nMy Home RStudio Setup\n\n\n\n\n\n\n\n\n\nSep 7, 2022\n\n\n\n\n\n\n\n\nPower Query Tip - Opening Multiple Files\n\n\n\n\n\n\n\n\n\nSep 5, 2022\n\n\n\n\n\n\n\n\nSome Notes About Flatpak\n\n\n\n\n\n\n\n\n\nSep 4, 2022\n\n\n\n\n\n\n\n\nMy favorite R packages\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\n\n\nSep 3, 2022\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "docs/site_libs/d3-3.5.9/CONTRIBUTING.html",
+    "href": "docs/site_libs/d3-3.5.9/CONTRIBUTING.html",
+    "title": "Tyler Clark",
+    "section": "",
+    "text": "Important: these GitHub issues are for bug reports and feature requests only. Please use StackOverflow or the d3-js Google group for general help.\nIf you’re looking for ways to contribute, please peruse open issues. The icebox is a good place to find ideas that are not currently in development. If you already have an idea, please check past issues to see whether your idea or a similar one was previously discussed.\nBefore submitting a pull request, consider implementing a live example first, say using bl.ocks.org. Real-world use cases go a long way to demonstrating the usefulness of a proposed feature. The more complex a feature’s implementation, the more usefulness it should provide. Share your demo using the #d3js tag on Twitter or by sending it to the d3-js Google group.\nIf your proposed feature does not involve changing core functionality, consider submitting it instead as a D3 plugin. New core features should be for general use, whereas plugins are suitable for more specialized use cases. When in doubt, it’s easier to start with a plugin before “graduating” to core.\nTo contribute new documentation or add examples to the gallery, just edit the Wiki!\n\n\n\nClick the “Fork” button to create your personal fork of the D3 repository.\nAfter cloning your fork of the D3 repository in the terminal, run npm install to install D3’s dependencies.\nCreate a new branch for your new feature. For example: git checkout -b my-awesome-feature. A dedicated branch for your pull request means you can develop multiple features at the same time, and ensures that your pull request is stable even if you later decide to develop an unrelated feature.\nThe d3.js and d3.min.js files are built from source files in the src directory. Do not edit d3.js directly. Instead, edit the source files, and then run make to build the generated files.\nUse make test to run tests and verify your changes. If you are adding a new feature, you should add new tests! If you are changing existing functionality, make sure the existing tests run, or update them as appropriate.\nSign D3’s Individual Contributor License Agreement. Unless you are submitting a trivial patch (such as fixing a typo), this form is needed to verify that you are able to contribute.\nSubmit your pull request, and good luck!"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Tyler Clark",
+    "section": "",
+    "text": "I have been working as a data analyst and statistician since 2016, and have always had a passion for learning, technology, and getting things done. In my spare time I enjoy tinkering with computers and software, playing and writing music, settling in for a long session with my charcoal smoker, or just getting outside."
+  },
+  {
+    "objectID": "index.html#education",
+    "href": "index.html#education",
+    "title": "Tyler Clark",
+    "section": "Education",
+    "text": "Education\n\nUniversity of Arkansas: Fayetteville, AR | 2013-2015\n\nM.S. in Poultry Science with an emphasis on applied Statistics and Analytics\n\nUniversity of Arkansas: Fayetteville, AR | 2007-2011\n\nBS in Poultry Science\nMinor in Agricultural Business\n\nElkins High School: Elkins, AR | 2003-2007\n\nSalutatorian\nFFA Officer\nFFA Poultry Judging Team State Finalist"
+  },
+  {
+    "objectID": "index.html#experience",
+    "href": "index.html#experience",
+    "title": "Tyler Clark",
+    "section": "Experience",
+    "text": "Experience\n\nButterball, LLC - 2016-Present\n\nLive Operations\nAnalytics and Statistics\nResearch\nBusiness Planning\nProcess Control\n\n\nThis website is written using Quarto and Rstudio. The source code is available on GitHub"
+  }
+]
