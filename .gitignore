@@ -4,4 +4,7 @@
 .Ruserdata
 
 /.quarto/
-/_site/
+
+/docs/
+/_freeze/
+/site_libs/

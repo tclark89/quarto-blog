@@ -1,0 +1,327 @@
+---
+title: "Using Crosstalk"
+date: "2023-02-14"
+categories: [crosstalk, R, ggplot2, plotly, code]
+execute: 
+  warning: false
+---
+
+Most everyone who works with data is familiar with or at least aware of 
+  [Shiny](https://shiny.rstudio.com/) and all of the great things you can do
+  with it's interactive capabilities. However, Shiny also requires some extra work
+  on the backend that may not be available to everyone. I can write Shiny apps
+  all day, but I can't share them with coworkers since they don't have R/Rstudio,
+  and my employer doesn't have a Shiny server, nor do we have an account with 
+  [shinyapps.io](https://www.shinyapps.io/). 
+  
+Most of the time when I need to share some data that I have worked on in R I use
+  Rmarkdown/Quarto, with a PDF or Word output for printing purposes and an HTML
+  report that uses Plotly, DT, Knitr, etc. to give some level of responsiveness.
+  However, the `crosstalk` library allows users to bridge the gap between
+  a fully interactive Shiny document and a fixed Rmarkdown/Quarto document.
+
+
+## Libraries
+
+First things first, we'll need to load some libraries:
+
+```{r}
+#| label: libraries
+
+library(tidyverse)
+library(crosstalk)
+library(d3scatter)
+library(plotly)
+library(DT)
+library(summarywidget)
+
+```
+
+ - tidyverse: Needs no explanation
+ - crosstalk: This is the magic sauce
+ - d3scatter: Simple plots (think `ggplot() + theme_bw()`) that work with `crosstalk`
+ - plotly: Wonderful interactive plots on their own, `plotly` plots can be made 
+    more interactive with `crosstalk`
+ - DT: DT makes tables that already have filtering and responsiveness built-in,
+    but we can use crosstalk to further filter and update in sync with the plots
+ - summarywidget: This lets us generate summary values, like you might do in Shiny
+
+
+Other crosstalk compatible libraries are `leaflet` for mapping and `rgl` for 
+  interactive 3d plotting.
+
+
+## The Basics
+
+To use crosstalk, we have to create a SharedData object:
+```{r}
+#| label: data-sharedMtCars
+sharedMtCars <- SharedData$new(mtcars)
+```
+
+Then we use these objects like data.frames in crosstalk-compatible widgets.
+
+`crosstalk` also provides some `filter_*` functions:
+```{r}
+#| label: basic-d3scatter-with-filters
+carsCheckBox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+carsSelect <- filter_select("am", "Automatic", sharedMtCars, ~am)
+carsSlider <- filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+carsPlot <- d3scatter(sharedMtCars, ~wt, ~mpg, ~factor(cyl), width="100%")
+```
+
+Changing the selected values will cause this plot to update, no need for Shiny:
+
+::: {.columns}
+
+:::: {.column width="30%"}
+```{r}
+#| label: basic-filters
+#| echo: false
+carsCheckBox
+carsSelect
+carsSlider
+```
+::::
+
+:::: {.column width="70%"}
+```{r}
+#| label: basic-plot
+#| echo: false
+carsPlot
+```
+::::
+
+:::
+
+
+
+
+## Simple Plots
+
+
+### d3scatter
+
+d3scatter is a dead-simple library for graphs that work with crosstalk. As seen
+  above, it's very much like a simple ggplot in appearance. As long as the plot
+  and all of the `filter_*` functions use the same SharedData object, then the
+  plot will update in real time with the various selections.
+  
+
+What's really neat about crosstalk is that we can update multiple plots at once:
+
+```{r}
+#| label: simple-plots-filters-plots
+# create a new SharedObject so we're not manipulating everything on the page:
+sharedMtCars <- SharedData$new(mtcars)
+
+carsCheckBox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+carsSelect <- filter_select("am", "Automatic", sharedMtCars, ~am)
+carsSlider <- filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+carsPlotMpg <- d3scatter(sharedMtCars, ~wt, ~mpg, ~factor(cyl), width="100%")
+carsPlothp <- d3scatter(sharedMtCars, ~wt, ~hp, ~factor(cyl), width="100%")
+
+```
+
+::: {.columns}
+
+:::: {.column width="30%"}
+```{r}
+#| label: simple-plots-filters
+#| echo: false
+carsCheckBox
+carsSelect
+carsSlider
+```
+::::
+
+:::: {.column width="35%"}
+```{r}
+#| label: simple-plot-mpg
+#| echo: false
+carsPlotMpg
+```
+::::
+
+:::: {.column width="35%"}
+```{r}
+#| label: simple-plot-hp
+#| echo: false
+carsPlothp
+```
+::::
+
+:::
+
+`d3scatter` also allows click-and-drag selection of points, which will also be 
+  applied to any other `d3scatter` plots using the same SharedData.
+
+
+### Plotly
+
+Plotly graphs are already responsive and allow zooming and selection, but using 
+  crosstalk `filter_` functions we can do even more selection than what would be
+  available otherwise, with the effects carrying over into other plots. 
+
+```{r}
+#| label: plotly-filter-plots
+sharedMtCars <- SharedData$new(mtcars)
+
+carsCheckBox <- filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+carsSelect <- filter_select("am", "Automatic", sharedMtCars, ~am)
+carsSlider <- filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+plotlyMpg <- plot_ly(sharedMtCars, x=~wt, y=~mpg, color = ~factor(cyl))
+plotlyHp <- plot_ly(sharedMtCars, x=~wt, y=~hp, color = ~factor(cyl))
+```
+
+::: {.columns}
+
+:::: {.column width="20%"}
+```{r}
+#| label: plotly-filters
+#| echo: false
+carsCheckBox
+carsSelect
+carsSlider
+```
+::::
+
+:::: {.column width="40%"}
+```{r}
+#| label: plotly-plot-mpg
+#| echo: false
+plotlyMpg 
+```
+::::
+
+:::: {.column width="40%"}
+```{r}
+#| label: plotly-plot-hp
+#| echo: false
+plotlyHp
+```
+::::
+
+:::
+
+
+## Data Tables
+
+Crosstalk can also update DT objects:
+
+```{r}
+#| label: dt-filter-plots
+#| eval: FALSE
+sharedMtCars <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+datatable(sharedMtCars)
+```
+
+
+```{r}
+#| label: dt-filter-plots-eval
+#| echo: FALSE
+sharedMtCars <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+datatable(sharedMtCars)
+```
+
+
+## Summary Values
+
+The crosstalk-compatible library `summarywidget` allows for simple summaries
+  of SharedData objects:
+
+```{r}
+#| label: summarywidget-filter-values
+#| eval: FALSE
+sharedMtCars <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+
+# Counts
+summarywidget(sharedMtCars, statistic = "count", digits=0)
+
+# Means
+summarywidget(sharedMtCars, statistic = "mean", column = "mpg", digits=1)
+
+# Sum
+summarywidget(sharedMtCars, statistic = "sum", column = "disp", digits=1)
+```
+
+These can be evaluated in text passages for ready-made summary statements.
+
+`summarywidget` can also apply to summary to a subset of the SharedData. This 
+  example averages mpg for automatic transmissions only:
+
+```{r}
+#| label: summarywidget-subset
+#| eval: false
+summarywidget(sharedMtCars, statistic = "mean", 
+              column = "mpg", digits=1, selection = ~am == 0)
+```
+
+Putting these pieces of code together, we can render the following:
+
+::: {.columns}
+
+:::: {.column width="30%"}
+```{r}
+#| label: summarywidget-filter-eval
+#| echo: false
+sharedMtCars <- SharedData$new(mtcars)
+
+filter_checkbox("cyl", "Cylinders", sharedMtCars, ~cyl, inline=T)
+filter_select("am", "Automatic", sharedMtCars, ~am)
+filter_slider("disp", "Displacement", sharedMtCars, ~disp)
+```
+::::
+
+:::: {.column width="10%"}
+::::
+
+:::: {.column width="60%"}
+
+Total cars selected:
+```{r}
+#| echo: false
+summarywidget(sharedMtCars, statistic = "count", digits=0)
+```
+
+<br>
+Average MPG:
+```{r}
+#| echo: false
+summarywidget(sharedMtCars, statistic = "mean", column = "mpg", digits=1)
+```
+
+<br>
+Average MPG (Manuals only):
+```{r}
+#| echo: false
+summarywidget(sharedMtCars, statistic = "mean", column = "mpg", digits=1,
+              selection = ~am == 0)
+```
+  
+::::
+
+:::
+
+Note: summarywidget can be used inline in rmarkdown documents rendered with knitr,
+  but Quarto doesn't want to play nicely with that yet. 
+  
+To see a complete dashboard click
+[here](https://tclark89.github.io/crosstalk-mtcars-dashboard/).
