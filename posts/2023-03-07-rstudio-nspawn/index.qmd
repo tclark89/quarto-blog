@@ -1,0 +1,16 @@
+---
+title: "RStudio in systemd Nspawn Container"
+date: "2023-03-07"
+categories: [Linux, R, RStudio, systemd, Containers, Sysadmin]
+image: "systemd-light.png"
+execute: 
+  warning: false
+---
+
+For some time now, I have been running RStudio at home via some sort
+  of [Docker configuration](../2022-09-07-my-rstudio-setup/index.qmd).
+  The [Rocker Project](https://rocker-project.org/) makes this relatively
+  easy to set up, but there are some downsides I have been struggling
+  with. 
+  
+
