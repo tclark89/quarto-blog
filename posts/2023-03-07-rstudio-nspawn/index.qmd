@@ -8,9 +8,25 @@ execute:
 ---
 
 
-For some time now, I have been running RStudio at home via some sort
-  of [Docker configuration](../2022-09-07-my-rstudio-setup/index.qmd).
+For some time now, I have been running RStudio Server at home via some 
+  sort of [Docker configuration](../2022-09-07-my-rstudio-setup/index.qmd).
   The [Rocker Project](https://rocker-project.org/) makes this relatively
   easy to set up, but there are some downsides I have been struggling
-  with, namely library management.
+  with, namely library management. Restarting the docker image means
+  re-installing all my additional libraries, system fonts, etc. There
+  is always the option of building a docker image that installs that 
+  stuff, but then I have to make sure it's up to date too. 
+  I also don't really like the idea of saving the account password as
+  plain-text in the docker-compose.yml file, 
+  even if it's only for that docker app. 
+  
+The first alternative I tried was a virtual machine, but that was a bit
+  clunkier than I really wanted. I am accessing the
+  server almost exclusively from my Chromebook, so I had to setup
+  [Cockpit](https://cockpit-project.org/) to access the VM via
+  a web browser for the initial setup, and use the browser to setup
+  network bridges, set RAM and CPU, etc., etc. As with the Docker image,
+  this can definitely work, but wasn't really what I wanted. 
+  
+
 
