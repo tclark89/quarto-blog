@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Tyler Clark">
-<meta name="dcterms.date" content="2022-09-04">
+<meta name="dcterms.date" content="2023-03-07">
 
-<title>Tyler Clark - Some Notes About Flatpak</title>
+<title>Tyler Clark - RStudio in systemd Nspawn Container</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -114,13 +177,14 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Some Notes About Flatpak</h1>
+      <h1 class="title">RStudio in systemd Nspawn Container</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">flatpak</div>
-                <div class="quarto-category">linux</div>
-                <div class="quarto-category">notes</div>
-                <div class="quarto-category">debian</div>
-                <div class="quarto-category">archlinux</div>
+                <div class="quarto-category">Linux</div>
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">RStudio</div>
+                <div class="quarto-category">systemd</div>
+                <div class="quarto-category">Containers</div>
+                <div class="quarto-category">Sysadmin</div>
               </div>
                   </div>
   </div>
@@ -138,7 +202,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">September 4, 2022</p>
+        <p class="date">March 7, 2023</p>
       </div>
     </div>
     
@@ -154,8 +218,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#a-distro-hopping-tale" id="toc-a-distro-hopping-tale" class="nav-link active" data-scroll-target="#a-distro-hopping-tale">A Distro-hopping Tale</a></li>
-  <li><a href="#flatpak-notes" id="toc-flatpak-notes" class="nav-link" data-scroll-target="#flatpak-notes">Flatpak Notes</a></li>
+  <li><a href="#linux-containers" id="toc-linux-containers" class="nav-link active" data-scroll-target="#linux-containers">Linux Containers</a>
+  <ul class="collapse">
+  <li><a href="#initial-setup" id="toc-initial-setup" class="nav-link" data-scroll-target="#initial-setup">Initial Setup</a></li>
+  <li><a href="#networking" id="toc-networking" class="nav-link" data-scroll-target="#networking">Networking</a></li>
+  <li><a href="#post-install" id="toc-post-install" class="nav-link" data-scroll-target="#post-install">Post-Install</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -165,32 +233,38 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="a-distro-hopping-tale" class="level2">
-<h2 class="anchored" data-anchor-id="a-distro-hopping-tale">A Distro-hopping Tale</h2>
-<p>After a few years of running <a href="https://archlinux.org/">ArchLinux</a> on my NAS PC, I recently (a couple weeks ago?) decided to switch to a solid foundation of <a href="https://www.debian.org/releases/stable/">Debian Stable</a> (Bullseye 11.4 at the time of this post), with most of my userland apps installed via Flatpak.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://flatpak.org/" title="Flatpak"><img src="Flatpak_Logo.svg.png" class="img-fluid figure-img" style="width:20.0%"></a></p>
-<p></p><figcaption class="figure-caption">Flatpak</figcaption><p></p>
-</figure>
-</div>
-<p>One is not better than the other, but I was tired of having to regularly check for updates, decide if they looked important, check the homepage for any breakage news, etc. It’s not so bad for a desktop that is used for tinkering and playing, but for a fileserver running programs that I’d rather not restart all the time (hold on, let me pause this show on Plex and make sure my backup NAS isn’t syncing)…</p>
-<p>So far so good. The overall system is smaller (due to Debian breaking up packages while Arch installs the kitchen sink at times), and it makes my root backup tarball smaller since I can leave out the flatpak directory and focus on the actual system.</p>
+<p>For some time now, I have been running RStudio Server at home via some sort of <a href="../../posts/2022-09-07-my-rstudio-setup/index.html">Docker configuration</a>. The <a href="https://rocker-project.org/">Rocker Project</a> makes this relatively easy to set up, but there are some downsides I have been struggling with, namely library management. Restarting the docker image means re-installing all my additional libraries, system fonts, etc. There is always the option of building a docker image that installs that stuff, but then I have to make sure it’s up to date too. I also don’t really like the idea of saving the account password as plain-text in the docker-compose.yml file, even if it’s only for that docker app.</p>
+<p>The first alternative I tried was a virtual machine, but that was a bit clunkier than I really wanted. I access my server almost exclusively from my Chromebook via SSH or web interfaces, so I had to setup <a href="https://cockpit-project.org/">Cockpit</a> to access the VM via a web browser for the initial setup, and use the browser to setup network bridges, set RAM and CPU, etc., etc. As with the Docker image, this can definitely work, but wasn’t really what I wanted.</p>
+<section id="linux-containers" class="level2">
+<h2 class="anchored" data-anchor-id="linux-containers">Linux Containers</h2>
+<p>Linux containers are somewhere between a Docker image and a full-blown virtual machine. There are multiple options, <a href="https://linuxcontainers.org/">LXC</a> being probably the most popular and full-blown, but I decided to use systemd-nspawn. It required no extra software to be installed, and is managed through systemd.</p>
+<section id="initial-setup" class="level3">
+<h3 class="anchored" data-anchor-id="initial-setup">Initial Setup</h3>
+<p>As the <a href="https://wiki.archlinux.org/title/Systemd-nspawn">Arch Wiki</a> puts it, systemd-nspawn is chroot on steroids. That means that it is pretty simple to setup. I used <code>debootstrap</code> to bootstrap a very minimal Debian Bullseye system in <code>/var/lib/machines/debian-rstudio</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> debootstrap <span class="at">--include</span><span class="op">=</span>systemd,dbus bullseye /var/lib/machines/debian-rstudio</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Continuing to follow the Wiki, I entered the chroot</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> systemd-nspawn <span class="at">-D</span> /var/lib/machines/debian-rstudio</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and setup a root password, a user account, and installed <a href="https://cran.r-project.org/bin/linux/debian/">R</a> and <a href="https://posit.co/download/rstudio-server/">RStudio Server</a>.</p>
+<p>That mostly sets up the chroot, but the container doesn’t have networking yet.</p>
 </section>
-<section id="flatpak-notes" class="level2">
-<h2 class="anchored" data-anchor-id="flatpak-notes">Flatpak Notes</h2>
-<p>Anyway, the main notes that I meant to put here are:</p>
-<ol type="1">
-<li><p><code>flatpak remote-add flathub flathub-url</code> is <strong>not</strong> the same as <code>sudo flatpak remote-add flathub flathub-url</code></p>
-<p>*For a single-user system there’s not that much real difference in terms of the experience, but installing flathub without sudo only installs the repo for YOU and then any apps you install get saved in /home. You do you.</p></li>
-<li><p>Flatpak apps are installed at <code>/var/lib/flatpak</code>, so keep that as a separate BTRFS subvolume to exclude them from root backups.</p></li>
-<li><p>For apps, MakeMKV in particular, the app’s personal root is /app/, not /.</p></li>
-<li><p>User config files and data are mostly stored per-app in ~/.var/, but some apps have access to /home/user.</p></li>
-<li><p>Add /var/lib/flatpak/exports/bin to you $PATH to more easily call the apps from the command line, in case error codes need to be looked at.</p></li>
-</ol>
-<p>Overall I’m pretty happy with the change. Most of the gui programs that I use are in flathub, so that’s pretty easy. I was worried about bloat and performance, but it’s really not that bad. Apps are sandboxed, yes, but they can share Flatpak libraries and runtimes so there isn’t so much redundancy. It’s really nice when installing a single Gnome app or Wine not to have to install an entire suite of Gnome apps and multi-lib stuff just for one program.</p>
+<section id="networking" class="level3">
+<h3 class="anchored" data-anchor-id="networking">Networking</h3>
+<p>I struggled with this a little, but networks are not my strong suit. Eventually I wound up with the following <code>.nspawn</code> configuration:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[Network]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>VirtualEthernet=yes</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Port=tcp:8787:8787</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This sets up a virtual ethernet link between the host and guest, sort of like a tunnel between the <code>host0</code> interface in the guest to the <code>ve-debian-rstudio</code> interface on the host machine. Systemd automagically makes this connection since I use <code>systemd-networkd</code>. The Port line creates an <code>iptables</code> rule to forward traffic from port 8787 (Rstudio’s default port) on the host to 8787 on the guest. The <a href="https://wiki.debian.org/nspawn">Debian Wiki</a> points out that I cannot access the Rstudio web interface from the host directly, but I don’t need to do that so I can live with that limitation.</p>
+<p>The Arch Wiki then showed me that I had to manually add 2 more <code>iptables</code> rules to the host:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a># iptables -A FORWARD -i ve-+ -o internet0 -j ACCEPT</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a># iptables -A INPUT -i ve-+ -p udp -m udp --dport 67 -j ACCEPT</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After that, it was just a matter of logging in to the chroot again and enabling systemd-networkd. Presto!</p>
+</section>
+<section id="post-install" class="level3">
+<h3 class="anchored" data-anchor-id="post-install">Post-Install</h3>
+<p>Now that I had a connection, I just had to install various R libraries, <code>tinytex</code>, etc. This entire post was written using the new installation. All that’s left to do now is keep using it and see how it does.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

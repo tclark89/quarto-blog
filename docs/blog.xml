@@ -9,8 +9,62 @@
 <link>https://tclark89.github.io/quarto-blog/blog.html</link>
 <atom:link href="https://tclark89.github.io/quarto-blog/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Tyler&#39;s personal blog</description>
-<generator>quarto-1.2.335</generator>
-<lastBuildDate>Tue, 14 Feb 2023 06:00:00 GMT</lastBuildDate>
+<generator>quarto-1.2.269</generator>
+<lastBuildDate>Tue, 07 Mar 2023 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>RStudio in systemd Nspawn Container</title>
+  <dc:creator>Tyler Clark</dc:creator>
+  <link>https://tclark89.github.io/quarto-blog/posts/2023-03-07-rstudio-nspawn/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>For some time now, I have been running RStudio Server at home via some sort of <a href="../../posts/2022-09-07-my-rstudio-setup/index.html">Docker configuration</a>. The <a href="https://rocker-project.org/">Rocker Project</a> makes this relatively easy to set up, but there are some downsides I have been struggling with, namely library management. Restarting the docker image means re-installing all my additional libraries, system fonts, etc. There is always the option of building a docker image that installs that stuff, but then I have to make sure it’s up to date too. I also don’t really like the idea of saving the account password as plain-text in the docker-compose.yml file, even if it’s only for that docker app.</p>
+<p>The first alternative I tried was a virtual machine, but that was a bit clunkier than I really wanted. I access my server almost exclusively from my Chromebook via SSH or web interfaces, so I had to setup <a href="https://cockpit-project.org/">Cockpit</a> to access the VM via a web browser for the initial setup, and use the browser to setup network bridges, set RAM and CPU, etc., etc. As with the Docker image, this can definitely work, but wasn’t really what I wanted.</p>
+<section id="linux-containers" class="level2">
+<h2 class="anchored" data-anchor-id="linux-containers">Linux Containers</h2>
+<p>Linux containers are somewhere between a Docker image and a full-blown virtual machine. There are multiple options, <a href="https://linuxcontainers.org/">LXC</a> being probably the most popular and full-blown, but I decided to use systemd-nspawn. It required no extra software to be installed, and is managed through systemd.</p>
+<section id="initial-setup" class="level3">
+<h3 class="anchored" data-anchor-id="initial-setup">Initial Setup</h3>
+<p>As the <a href="https://wiki.archlinux.org/title/Systemd-nspawn">Arch Wiki</a> puts it, systemd-nspawn is chroot on steroids. That means that it is pretty simple to setup. I used <code>debootstrap</code> to bootstrap a very minimal Debian Bullseye system in <code>/var/lib/machines/debian-rstudio</code>:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;">sudo</span> debootstrap <span class="at" style="color: #657422;">--include</span><span class="op" style="color: #5E5E5E;">=</span>systemd,dbus bullseye /var/lib/machines/debian-rstudio</span></code></pre></div>
+<p>Continuing to follow the Wiki, I entered the chroot</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;">sudo</span> systemd-nspawn <span class="at" style="color: #657422;">-D</span> /var/lib/machines/debian-rstudio</span></code></pre></div>
+<p>and setup a root password, a user account, and installed <a href="https://cran.r-project.org/bin/linux/debian/">R</a> and <a href="https://posit.co/download/rstudio-server/">RStudio Server</a>.</p>
+<p>That mostly sets up the chroot, but the container doesn’t have networking yet.</p>
+</section>
+<section id="networking" class="level3">
+<h3 class="anchored" data-anchor-id="networking">Networking</h3>
+<p>I struggled with this a little, but networks are not my strong suit. Eventually I wound up with the following <code>.nspawn</code> configuration:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1">[Network]</span>
+<span id="cb3-2">VirtualEthernet=yes</span>
+<span id="cb3-3">Port=tcp:8787:8787</span></code></pre></div>
+<p>This sets up a virtual ethernet link between the host and guest, sort of like a tunnel between the <code>host0</code> interface in the guest to the <code>ve-debian-rstudio</code> interface on the host machine. Systemd automagically makes this connection since I use <code>systemd-networkd</code>. The Port line creates an <code>iptables</code> rule to forward traffic from port 8787 (Rstudio’s default port) on the host to 8787 on the guest. The <a href="https://wiki.debian.org/nspawn">Debian Wiki</a> points out that I cannot access the Rstudio web interface from the host directly, but I don’t need to do that so I can live with that limitation.</p>
+<p>The Arch Wiki then showed me that I had to manually add 2 more <code>iptables</code> rules to the host:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"># iptables -A FORWARD -i ve-+ -o internet0 -j ACCEPT</span>
+<span id="cb4-2"># iptables -A INPUT -i ve-+ -p udp -m udp --dport 67 -j ACCEPT</span></code></pre></div>
+<p>After that, it was just a matter of logging in to the chroot again and enabling systemd-networkd. Presto!</p>
+</section>
+<section id="post-install" class="level3">
+<h3 class="anchored" data-anchor-id="post-install">Post-Install</h3>
+<p>Now that I had a connection, I just had to install various R libraries, <code>tinytex</code>, etc. This entire post was written using the new installation. All that’s left to do now is keep using it and see how it does.</p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>Linux</category>
+  <category>R</category>
+  <category>RStudio</category>
+  <category>systemd</category>
+  <category>Containers</category>
+  <category>Sysadmin</category>
+  <guid>https://tclark89.github.io/quarto-blog/posts/2023-03-07-rstudio-nspawn/index.html</guid>
+  <pubDate>Tue, 07 Mar 2023 06:00:00 GMT</pubDate>
+  <media:content url="https://tclark89.github.io/quarto-blog/posts/2023-03-07-rstudio-nspawn/systemd-light.png" medium="image" type="image/png" height="96" width="144"/>
+</item>
 <item>
   <title>Using Crosstalk</title>
   <dc:creator>Tyler Clark</dc:creator>
