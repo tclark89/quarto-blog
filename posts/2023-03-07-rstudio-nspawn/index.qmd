@@ -21,8 +21,8 @@ For some time now, I have been running RStudio Server at home via some
   even if it's only for that docker app. 
   
 The first alternative I tried was a virtual machine, but that was a bit
-  clunkier than I really wanted. I am accessing the
-  server almost exclusively from my Chromebook, so I had to setup
+  clunkier than I really wanted. I access my server almost exclusively 
+  from my Chromebook via SSH or web interfaces, so I had to setup
   [Cockpit](https://cockpit-project.org/) to access the VM via
   a web browser for the initial setup, and use the browser to setup
   network bridges, set RAM and CPU, etc., etc. As with the Docker image,
